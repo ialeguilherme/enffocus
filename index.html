@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>enFFocus 2.2 | Study Suite</title>
+    <title>enFFocus 2.1 | Study Suite</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
@@ -14,15 +14,14 @@
             --bg-sidebar: #ffffff;
             --bg-card: #ffffff;
             
-            --primary: #3b82f6;
+            --primary: #3b82f6; /* Azul Vibrante */
             --primary-dark: #1d4ed8;
             --primary-light: #eff6ff;
             
-            --accent: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --pink: #ec4899;
-            --purple: #8b5cf6;
+            --accent: #10b981; /* Verde Menta (Sucesso) */
+            --warning: #f59e0b; /* Laranja (Atenção) */
+            --danger: #ef4444; /* Vermelho (Erro) */
+            --pink: #ec4899;   /* Rosa (Destaque) */
             
             --text-main: #1e293b;
             --text-muted: #64748b;
@@ -30,6 +29,8 @@
             
             --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
             --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            
             --radius: 16px;
         }
 
@@ -40,7 +41,7 @@
             background-color: var(--bg-body);
             color: var(--text-main);
             height: 100vh;
-            overflow: hidden;
+            overflow: hidden; /* App feel */
             display: flex;
         }
 
@@ -64,8 +65,10 @@
             font-weight: 700;
             color: var(--primary);
             margin-bottom: 2.5rem;
-            cursor: pointer;
+            cursor: pointer; /* Feature 7 */
         }
+
+        .brand i { font-size: 1.2rem; }
 
         .nav-menu { list-style: none; display: flex; flex-direction: column; gap: 8px; }
 
@@ -99,7 +102,7 @@
             margin-bottom: 20px;
         }
 
-        /* --- Grid Layouts --- */
+        /* --- Grids & Layouts --- */
         .section { display: none; animation: fadeIn 0.4s ease; }
         .section.active { display: block; }
 
@@ -107,14 +110,10 @@
 
         .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Ajustado para caber mais cards */
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
-        
-        /* Utilitário para cards largos */
-        .card-wide { grid-column: span 2; }
-        @media (max-width: 1024px) { .card-wide { grid-column: span 1; } }
 
         .card {
             background: var(--bg-card);
@@ -123,11 +122,13 @@
             box-shadow: var(--shadow-sm);
             border: 1px solid var(--border);
             transition: transform 0.2s;
-            display: flex; flex-direction: column;
         }
         
-        .stat-card { flex-direction: row; align-items: center; gap: 1rem; }
-        
+        .card:hover { box-shadow: var(--shadow-md); }
+        .clickable-card { cursor: pointer; }
+        .clickable-card:hover { transform: translateY(-3px); border-color: var(--primary); }
+
+        .stat-card { display: flex; align-items: center; gap: 1rem; }
         .stat-icon {
             width: 45px; height: 45px; flex-shrink: 0;
             border-radius: 12px;
@@ -141,71 +142,89 @@
         .bg-red { background: #fee2e2; color: #dc2626; }
         .bg-pink { background: #fce7f3; color: #db2777; }
 
-        .stat-info h3 { font-size: 1.5rem; font-weight: 700; line-height: 1; margin-bottom: 4px; }
-        .stat-info p { font-size: 0.8rem; color: var(--text-muted); }
+        .stat-info { overflow: hidden; }
+        .stat-info h3 { font-size: 1.5rem; font-weight: 700; line-height: 1; margin-bottom: 4px; white-space: nowrap; }
+        .stat-info p { font-size: 0.8rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* --- Mini Checklist (Dashboard) --- */
-        .mini-checklist {
-            margin-top: 10px;
-            max-height: 120px;
-            overflow-y: auto;
-            display: flex; flex-direction: column; gap: 5px;
-        }
-        .mini-check-item {
-            display: flex; align-items: center; gap: 8px;
-            font-size: 0.85rem; color: var(--text-main);
-            padding: 4px 0; border-bottom: 1px dashed var(--border);
-        }
-        .mini-check-item:last-child { border: none; }
-        .mini-check-empty { font-size: 0.8rem; color: var(--text-muted); font-style: italic; }
-
-        /* --- Subject Blocks & Lists --- */
+        /* --- Subject Blocks --- */
         .subjects-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 1.5rem;
         }
+
         .subject-card {
-            background: white; border-radius: var(--radius); padding: 1.5rem;
-            border: 1px solid var(--border); cursor: pointer; position: relative; overflow: hidden;
-            transition: transform 0.2s;
+            background: white;
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
-        .subject-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+
+        .subject-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); border-color: var(--primary); }
+        .subject-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--primary);
+        }
+
         .progress-bar-bg { background: #e2e8f0; height: 6px; border-radius: 3px; margin-top: 15px; overflow: hidden; }
         .progress-bar-fill { height: 100%; background: var(--primary); width: 0%; transition: width 1s ease; }
 
+        /* --- Lists & Tables --- */
         .list-container {
-            background: white; border-radius: var(--radius);
-            box-shadow: var(--shadow-sm); overflow: hidden; border: 1px solid var(--border);
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            border: 1px solid var(--border);
         }
-        .list-item {
-            display: flex; align-items: center; padding: 1rem 1.5rem;
-            border-bottom: 1px solid var(--border); gap: 1rem; cursor: pointer;
-        }
-        .list-item:hover { background: #f8fafc; }
-        .checkbox-custom { width: 20px; height: 20px; accent-color: var(--primary); cursor: pointer; }
 
-        /* --- Calendar --- */
+        .list-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            gap: 1rem;
+            transition: background 0.2s;
+            cursor: pointer; /* Feature 2 */
+        }
+
+        .list-item:hover { background: #f8fafc; }
+        .list-item:last-child { border-bottom: none; }
+
+        .checkbox-custom {
+            width: 20px; height: 20px;
+            cursor: pointer; accent-color: var(--primary);
+        }
+
+        .tag {
+            padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;
+        }
+        .tag-blue { background: #e0f2fe; color: #0284c7; }
+        .tag-green { background: #dcfce7; color: #16a34a; }
+        .tag-red { background: #fee2e2; color: #dc2626; }
+
+        /* --- Calendar Specifics --- */
         .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-        .calendar-controls { display: flex; gap: 5px; background: white; padding: 4px; border-radius: 10px; border: 1px solid var(--border); }
-        .cal-btn { padding: 6px 12px; border: none; background: transparent; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
-        .cal-btn.active { background: var(--primary-light); color: var(--primary); }
-        
         .calendar-grid-header { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: 600; color: var(--text-muted); margin-bottom: 0.5rem; }
         .calendar-day-cell {
-            min-height: 100px;
+            aspect-ratio: 1; 
             border: 1px solid var(--border); border-radius: 8px;
-            display: flex; flex-direction: column; align-items: flex-start;
+            display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;
             padding: 5px; cursor: pointer; transition: all 0.2s;
-            overflow: hidden; position: relative; background: white;
+            overflow: hidden; position: relative;
         }
-        .calendar-day-cell:hover { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-light); }
+        .calendar-day-cell:hover { background: #f8fafc; border-color: var(--primary); }
         .calendar-day-cell.today { background: #eff6ff; border-color: var(--primary); }
         .calendar-day-cell.empty { background: transparent; border: none; cursor: default; }
 
-        .day-number { font-weight: 700; margin-bottom: 4px; font-size: 0.9rem; }
+        .day-number { font-weight: 700; margin-bottom: 2px; font-size: 0.9rem; }
+        
         .cal-event {
-            font-size: 0.7rem; padding: 2px 4px; border-radius: 4px; margin-bottom: 2px; width: 100%;
+            font-size: 0.65rem; padding: 2px 4px; border-radius: 4px; margin-bottom: 2px; width: 100%;
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
         .evt-study { background: #dbeafe; color: #1e40af; }
@@ -213,10 +232,34 @@
         .evt-exam { background: #fee2e2; color: #991b1b; font-weight: bold; }
 
         /* --- Buttons --- */
-        .btn { padding: 10px 20px; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-family: inherit; }
+        .btn {
+            padding: 10px 20px; border: none; border-radius: 10px;
+            font-weight: 600; cursor: pointer; transition: all 0.2s;
+            display: inline-flex; align-items: center; gap: 8px; font-family: inherit;
+        }
         .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); }
         .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
+        .btn-outline:hover { background: #f1f5f9; }
         .btn-sm { padding: 6px 12px; font-size: 0.85rem; }
+        
+        /* Edit Actions */
+        .edit-actions { display: none; gap: 5px; }
+        .edit-mode .edit-actions { display: flex; }
+        .btn-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); background: white; cursor: pointer; }
+        .btn-icon:hover { background: #f1f5f9; }
+        .text-red { color: var(--danger); }
+        .text-green { color: var(--accent); }
+        
+        .fab {
+            position: fixed; bottom: 30px; right: 30px;
+            width: 60px; height: 60px; border-radius: 50%;
+            background: var(--primary); color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; box-shadow: var(--shadow-lg);
+            cursor: pointer; z-index: 90; transition: transform 0.2s;
+        }
+        .fab:hover { transform: scale(1.1); }
 
         /* --- Modal --- */
         .modal-overlay {
@@ -226,36 +269,56 @@
             z-index: 100; opacity: 0; transition: opacity 0.3s;
         }
         .modal-overlay.open { display: flex; opacity: 1; }
+
         .modal {
             background: white; width: 90%; max-width: 500px; max-height: 85vh;
             border-radius: 20px; padding: 2rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
             transform: scale(0.95); transition: transform 0.3s; overflow-y: auto;
         }
         .modal-overlay.open .modal { transform: scale(1); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-        
-        .form-group { margin-bottom: 1rem; }
-        .form-input, .form-select, .form-textarea { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 10px; font-family: inherit; }
-        
-        /* Event List inside Modal */
-        .day-details-list { display: flex; flex-direction: column; gap: 10px; }
-        .day-event-item {
-            padding: 10px; border-radius: 8px; border-left: 4px solid #ccc; background: #f8fafc;
-        }
-        .day-event-item.type-study { border-color: var(--primary); }
-        .day-event-item.type-review { border-color: var(--warning); }
-        .day-event-item.type-exam { border-color: var(--danger); background: #fef2f2; }
 
-        /* --- Toast --- */
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .close-modal { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-muted); }
+
+        .form-group { margin-bottom: 1rem; }
+        .form-label { display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.9rem; }
+        .form-input, .form-select, .form-textarea {
+            width: 100%; padding: 10px 14px;
+            border: 1px solid var(--border); border-radius: 10px;
+            font-family: inherit; font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+        .form-input:focus { border-color: var(--primary); ring: 2px solid var(--primary-light); }
+
+        /* Filters Bar */
+        .filters-bar {
+            display: flex; gap: 10px; margin-bottom: 1rem; flex-wrap: wrap;
+        }
+        
+        /* Table Simple */
+        .table-simple { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        .table-simple th { text-align: left; padding: 8px; border-bottom: 2px solid var(--border); color: var(--text-muted); }
+        .table-simple td { padding: 8px; border-bottom: 1px solid var(--border); }
+
+        /* --- Toast Notification --- */
         .toast-container { position: fixed; top: 20px; right: 20px; z-index: 200; display: flex; flex-direction: column; gap: 10px; }
-        .toast { background: white; padding: 16px; border-radius: 12px; box-shadow: var(--shadow-lg); border-left: 5px solid var(--primary); display: flex; gap: 10px; animation: slideIn 0.3s; }
+        .toast {
+            background: white; padding: 16px 20px; border-radius: 12px;
+            box-shadow: var(--shadow-lg); border-left: 5px solid var(--primary);
+            display: flex; align-items: center; gap: 12px;
+            animation: slideIn 0.3s ease; min-width: 300px;
+        }
         .toast.success { border-left-color: var(--accent); }
+        .toast.error { border-left-color: var(--danger); }
         @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
 
+        /* --- Responsivo --- */
         @media (max-width: 768px) {
             .sidebar { position: fixed; transform: translateX(-100%); height: 100%; }
             .sidebar.active { transform: translateX(0); }
             .header-mobile { display: flex; }
+            .main { padding: 1rem; }
             .dashboard-grid { grid-template-columns: 1fr 1fr; }
         }
     </style>
@@ -313,72 +376,73 @@
             <div class="dashboard-grid">
                 <div class="card stat-card">
                     <div class="stat-icon bg-blue"><i class="fas fa-clock"></i></div>
-                    <div class="stat-info"><h3 id="dashTotalHours">0h</h3><p>Horas Totais</p></div>
+                    <div class="stat-info">
+                        <h3 id="dashTotalHours">0h</h3>
+                        <p>Horas Totais</p>
+                    </div>
                 </div>
                 <div class="card stat-card">
                     <div class="stat-icon bg-green"><i class="fas fa-check"></i></div>
-                    <div class="stat-info"><h3 id="dashAccuracy">0%</h3><p>Aproveitamento</p></div>
+                    <div class="stat-info">
+                        <h3 id="dashAccuracy">0%</h3>
+                        <p>Aproveitamento</p>
+                    </div>
                 </div>
                 <div class="card stat-card">
                     <div class="stat-icon bg-orange"><i class="fas fa-fire"></i></div>
-                    <div class="stat-info"><h3 id="dashStreak">0</h3><p>Dias Seguidos</p></div>
+                    <div class="stat-info">
+                        <h3 id="dashStreak">0</h3>
+                        <p>Dias Seguidos</p>
+                    </div>
                 </div>
                 <div class="card stat-card">
                     <div class="stat-icon bg-purple"><i class="fas fa-question"></i></div>
-                    <div class="stat-info"><h3 id="dashQuestions">0</h3><p>Questões Feitas</p></div>
+                    <div class="stat-info">
+                        <h3 id="dashQuestions">0</h3>
+                        <p>Questões Feitas</p>
+                    </div>
                 </div>
-
-                <div class="card card-wide">
-                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
-                        <div class="stat-icon bg-pink" style="width:35px; height:35px; font-size:1rem;"><i class="fas fa-stopwatch"></i></div>
-                        <div>
+                <div class="card stat-card" style="grid-column: span 2;">
+                    <div class="stat-icon bg-pink"><i class="fas fa-stopwatch"></i></div>
+                    <div class="stat-info" style="width: 100%;">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+                            <h3 id="dashMostStudiedTime">0h</h3>
                             <span style="font-size:0.8rem; color:var(--text-muted)">Foco Principal</span>
-                            <h4 id="dashMostStudiedName" style="margin:0;">-</h4>
                         </div>
-                        <h3 id="dashMostStudiedTime" style="margin-left:auto;">0h</h3>
-                    </div>
-                    <div class="progress-bar-bg" style="margin-top:0;">
-                        <div id="dashMostStudiedBar" class="progress-bar-fill" style="width: 0%"></div>
-                    </div>
-                </div>
-
-                <div class="card card-wide">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
-                        <div style="display:flex; align-items:center; gap:10px;">
-                            <div class="stat-icon bg-orange" style="width:35px; height:35px; font-size:1rem;"><i class="fas fa-clipboard-check"></i></div>
-                            <h4 style="margin:0;">Revisões de Hoje</h4>
-                        </div>
-                        <span id="dashReviewCount" style="font-size:0.8rem; font-weight:bold; color:var(--warning);">0</span>
-                    </div>
-                    
-                    <div class="mini-checklist" id="dashTodayReviews">
-                        <div class="mini-check-empty">Nenhuma revisão para hoje.</div>
+                        <p id="dashMostStudiedName" style="font-weight: 500; font-size: 1rem;">-</p>
                     </div>
                 </div>
             </div>
 
             <h3 style="margin-bottom: 1rem;">Seu Progresso por Área</h3>
-            <div class="subjects-grid" id="dashboardProgressGrid"></div>
+            <div class="subjects-grid" id="dashboardProgressGrid">
+            </div>
         </section>
 
         <section id="study" class="section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
                 <h2>Blocos de Estudo</h2>
             </div>
+            
             <div class="list-container">
-                <div style="padding: 1rem; border-bottom: 1px solid var(--border); display: flex; gap: 10px; flex-wrap: wrap;">
-                    <button class="btn btn-sm btn-primary filter-btn" data-filter="nursing">Enfermagem</button>
-                    <button class="btn btn-sm btn-outline filter-btn" data-filter="sus">SUS</button>
-                    <button class="btn btn-sm btn-outline filter-btn" data-filter="portuguese">Português</button>
-                    <button class="btn btn-sm btn-outline filter-btn" data-filter="logic">Lógica</button>
-                    <button class="btn btn-sm btn-outline" style="margin-left:auto;" onclick="app.toggleEditMode()">
-                        <i class="fas fa-cog"></i> Editar
+                <div style="padding: 1rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <div style="display: flex; gap: 10px; overflow-x: auto;">
+                        <button class="btn btn-sm btn-primary filter-btn" data-filter="nursing">Enfermagem</button>
+                        <button class="btn btn-sm btn-outline filter-btn" data-filter="sus">SUS</button>
+                        <button class="btn btn-sm btn-outline filter-btn" data-filter="portuguese">Português</button>
+                        <button class="btn btn-sm btn-outline filter-btn" data-filter="logic">Lógica</button>
+                    </div>
+                    
+                    <button class="btn btn-sm btn-outline" id="toggleEditBtn" onclick="app.toggleEditMode()">
+                        <i class="fas fa-cog"></i> Modo Edição
                     </button>
                 </div>
+                
                 <div id="subjectsListContainer"></div>
+                
                 <div id="addSubjectContainer" style="padding: 1rem; border-top: 1px solid var(--border); display: none;">
                     <button class="btn btn-sm btn-outline" style="width: 100%; border-style: dashed;" onclick="app.addNewSubject()">
-                        <i class="fas fa-plus"></i> Adicionar Assunto
+                        <i class="fas fa-plus"></i> Adicionar Novo Assunto
                     </button>
                 </div>
             </div>
@@ -388,62 +452,91 @@
             <div style="display: flex; justify-content: space-between; margin-bottom: 1.5rem;">
                 <h2>Análise e Histórico</h2>
                 <button class="btn btn-primary" onclick="app.openQuestionModal()">
-                    <i class="fas fa-plus"></i> Registrar
+                    <i class="fas fa-plus"></i> Registrar Novas
                 </button>
             </div>
             
             <div class="dashboard-grid" id="questionsDashboard">
                 <div class="card stat-card">
                     <div class="stat-icon bg-green"><i class="fas fa-bullseye"></i></div>
-                    <div class="stat-info"><h3 id="qDashRate">0%</h3><p>Taxa de Acerto</p></div>
+                    <div class="stat-info">
+                        <h3 id="qDashRate">0%</h3>
+                        <p>Taxa de Acerto</p>
+                    </div>
                 </div>
                 <div class="card stat-card">
                     <div class="stat-icon bg-blue"><i class="fas fa-list-ol"></i></div>
-                    <div class="stat-info"><h3 id="qDashTotal">0</h3><p>Respondidas</p></div>
+                    <div class="stat-info">
+                        <h3 id="qDashTotal">0</h3>
+                        <p>Respondidas</p>
+                    </div>
                 </div>
-                <div class="card stat-card card-wide" style="cursor:pointer;" onclick="app.openPerformanceRanking()">
+                <div class="card stat-card clickable-card" style="grid-column: span 2;" onclick="app.openPerformanceRanking()">
                     <div class="stat-icon bg-purple"><i class="fas fa-trophy"></i></div>
                     <div class="stat-info" style="flex:1">
-                        <div style="display:flex; justify-content:space-between;"><span style="font-size:0.8rem;">Melhor</span><strong id="qDashBestVal" class="text-green">-</strong></div>
-                        <h4 id="qDashBestName" style="font-size:1rem; margin-bottom:5px;">-</h4>
-                        <div style="display:flex; justify-content:space-between; border-top:1px solid var(--border); padding-top:2px;"><span style="font-size:0.8rem;">Atenção</span><strong id="qDashWorstVal" class="text-red">-</strong></div>
-                        <h4 id="qDashWorstName" style="font-size:1rem;">-</h4>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span style="font-size: 0.8rem; color: var(--text-muted);">Melhor Desempenho</span>
+                            <strong id="qDashBestVal" class="text-green">-</strong>
+                        </div>
+                        <h4 id="qDashBestName" style="font-size: 1rem; margin-bottom: 10px;">-</h4>
+                        
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px; border-top: 1px solid var(--border); padding-top: 5px;">
+                            <span style="font-size: 0.8rem; color: var(--text-muted);">Atenção Necessária</span>
+                            <strong id="qDashWorstVal" class="text-red">-</strong>
+                        </div>
+                        <h4 id="qDashWorstName" style="font-size: 1rem;">-</h4>
+                        
+                        <div style="text-align: right; font-size: 0.75rem; color: var(--primary); margin-top: 5px;">
+                            <i class="fas fa-expand-alt"></i> Ver detalhes
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div style="display: flex; gap: 10px; margin-bottom: 1rem;">
-                <input type="text" id="qFilterSubject" class="form-input" placeholder="Filtrar assunto..." onkeyup="app.renderQuestionsHistory()">
-                <input type="date" id="qFilterDate" class="form-input" style="width:150px;" onchange="app.renderQuestionsHistory()">
+            <h3 style="margin-bottom: 1rem;">Histórico Recente</h3>
+            
+            <div class="filters-bar">
+                <input type="text" id="qFilterSubject" class="form-input" placeholder="Filtrar por assunto..." style="flex: 2; min-width: 150px;" onkeyup="app.renderQuestionsHistory()">
+                <input type="date" id="qFilterDate" class="form-input" style="flex: 1; min-width: 130px;" onchange="app.renderQuestionsHistory()">
+                <button class="btn btn-outline" onclick="document.getElementById('qFilterSubject').value=''; document.getElementById('qFilterDate').value=''; app.renderQuestionsHistory()">
+                    Limpar
+                </button>
             </div>
-            <div class="list-container" id="questionsHistoryList"></div>
+
+            <div class="list-container" id="questionsHistoryList">
+                <div style="padding: 2rem; text-align: center; color: var(--text-muted);">
+                    Carregando...
+                </div>
+            </div>
         </section>
 
         <section id="reviews" class="section">
             <h2>Revisões Pendentes</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Baseado na Curva do Esquecimento (24h, 7d, 30d)</p>
             <div class="list-container" id="reviewsList"></div>
         </section>
 
         <section id="calendar" class="section">
             <div class="calendar-header">
-                <h2 id="calendarTitle">Calendário</h2>
-                <div style="display: flex; align-items: center; gap: 15px;">
-                    <div class="calendar-controls">
-                        <button class="cal-btn active" id="btnViewMonth" onclick="app.switchCalendarView('month')">Mês</button>
-                        <button class="cal-btn" id="btnViewWeek" onclick="app.switchCalendarView('week')">Semana</button>
-                    </div>
-                    <button class="btn btn-sm btn-primary" onclick="app.openExamModal()">
+                <h2 id="calendarTitle">Mês Atual</h2>
+                <div>
+                     <button class="btn btn-sm btn-primary" onclick="app.openExamModal()">
                         <i class="fas fa-plus"></i> Prova
-                    </button>
+                     </button>
                 </div>
             </div>
             <div class="card" style="margin-top: 1rem; overflow-x: auto;">
                 <div class="calendar-grid-header">
                     <div>Dom</div><div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div>
                 </div>
-                <div id="calendarGrid" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px;"></div>
+                <div id="calendarGrid" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px;">
+                </div>
             </div>
-            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">* Clique em um dia para ver os detalhes.</p>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">
+                <span style="display:inline-block; width:10px; height:10px; background:#fee2e2; border-radius:2px;"></span> Prova
+                <span style="display:inline-block; width:10px; height:10px; background:#dbeafe; border-radius:2px; margin-left:10px;"></span> Estudo
+                <span style="display:inline-block; width:10px; height:10px; background:#ffedd5; border-radius:2px; margin-left:10px;"></span> Revisão
+            </p>
         </section>
 
     </main>
@@ -454,78 +547,151 @@
 
     <div class="modal-overlay" id="studyModal">
         <div class="modal">
-            <div class="modal-header"><h3>Registrar Estudo</h3><button class="close-modal" onclick="app.closeModals()">&times;</button></div>
+            <div class="modal-header">
+                <h3>Registrar Estudo</h3>
+                <button class="close-modal" onclick="app.closeModals()">&times;</button>
+            </div>
             <form id="formStudy">
-                <input type="hidden" id="studySubjectId"><input type="hidden" id="studyBlockId">
-                <div class="form-group"><label class="form-label">Assunto</label><input type="text" id="studySubjectName" class="form-input" disabled style="background: #f1f5f9;"></div>
-                <div class="form-group"><label class="form-label">Tempo (h)</label><input type="number" id="studyDuration" step="0.1" class="form-input" required></div>
-                <div class="form-group"><label class="form-label">Data</label><input type="date" id="studyDate" class="form-input" required></div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Salvar</button>
+                <input type="hidden" id="studySubjectId">
+                <input type="hidden" id="studyBlockId">
+                <div class="form-group">
+                    <label class="form-label">Assunto</label>
+                    <input type="text" id="studySubjectName" class="form-input" disabled style="background: #f1f5f9;">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tempo (Horas)</label>
+                    <input type="number" id="studyDuration" step="0.1" class="form-input" placeholder="Ex: 1.5" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Data</label>
+                    <input type="date" id="studyDate" class="form-input" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Salvar Registro</button>
             </form>
         </div>
     </div>
 
     <div class="modal-overlay" id="questionModal">
         <div class="modal">
-            <div class="modal-header"><h3>Registrar Questões</h3><button class="close-modal" onclick="app.closeModals()">&times;</button></div>
+            <div class="modal-header">
+                <h3>Registrar Questões</h3>
+                <button class="close-modal" onclick="app.closeModals()">&times;</button>
+            </div>
             <form id="formQuestions">
-                <div class="form-group"><label class="form-label">Assunto</label><select id="questionSubjectSelect" class="form-select" required><option value="">Selecione...</option></select></div>
-                <div style="display:flex; gap:1rem;"><div class="form-group"><label class="form-label">Total</label><input type="number" id="qTotal" class="form-input" required></div><div class="form-group"><label class="form-label">Acertos</label><input type="number" id="qCorrect" class="form-input" required></div></div>
-                <div class="form-group"><label class="form-label">Notas</label><textarea id="qNotes" class="form-textarea" rows="2"></textarea></div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Salvar</button>
+                <div class="form-group">
+                    <label class="form-label">Assunto</label>
+                    <select id="questionSubjectSelect" class="form-select" required>
+                        <option value="">Selecione...</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <div class="form-group" style="flex:1;">
+                        <label class="form-label">Total</label>
+                        <input type="number" id="qTotal" class="form-input" required min="1">
+                    </div>
+                    <div class="form-group" style="flex:1;">
+                        <label class="form-label">Acertos</label>
+                        <input type="number" id="qCorrect" class="form-input" required min="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Análise de Erros (Opcional)</label>
+                    <textarea id="qNotes" class="form-textarea" rows="2" placeholder="Onde você errou?"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Salvar Questões</button>
             </form>
         </div>
     </div>
 
     <div class="modal-overlay" id="questionDetailsModal">
         <div class="modal">
-            <div class="modal-header"><h3 id="qdTitle">Detalhes</h3><button class="close-modal" onclick="app.closeModals()">&times;</button></div>
-            <div id="qdContent"></div>
+            <div class="modal-header">
+                <h3 id="qdTitle">Detalhes da Prática</h3>
+                <button class="close-modal" onclick="app.closeModals()">&times;</button>
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+                <p style="color: var(--text-muted); font-size: 0.9rem;" id="qdDate"></p>
+                <div style="display:flex; gap: 10px; margin: 10px 0;">
+                    <div class="tag tag-blue" id="qdTotal"></div>
+                    <div class="tag tag-green" id="qdCorrect"></div>
+                    <div class="tag" id="qdPercent"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Suas Anotações / Análise de Erro:</label>
+                <div id="qdNotes" style="background: #f8fafc; padding: 1rem; border-radius: 10px; border: 1px solid var(--border); min-height: 80px;"></div>
+            </div>
         </div>
     </div>
 
     <div class="modal-overlay" id="rankingModal">
         <div class="modal">
-            <div class="modal-header"><h3>Ranking</h3><button class="close-modal" onclick="app.closeModals()">&times;</button></div>
-            <div id="rankingTableContainer"></div>
+            <div class="modal-header">
+                <h3>Ranking de Desempenho</h3>
+                <button class="close-modal" onclick="app.closeModals()">&times;</button>
+            </div>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">Baseado na taxa de acertos das questões resolvidas.</p>
+            <div style="max-height: 400px; overflow-y: auto;">
+                <table class="table-simple">
+                    <thead>
+                        <tr>
+                            <th>Assunto</th>
+                            <th style="text-align:center;">Qtd</th>
+                            <th style="text-align:right;">% Acerto</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rankingTableBody">
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
     <div class="modal-overlay" id="examModal">
         <div class="modal">
-            <div class="modal-header"><h3>Agendar Prova</h3><button class="close-modal" onclick="app.closeModals()">&times;</button></div>
-            <form id="formExam">
-                <div class="form-group"><label class="form-label">Nome</label><input type="text" id="examName" class="form-input" required></div>
-                <div class="form-group"><label class="form-label">Data</label><input type="date" id="examDate" class="form-input" required></div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Salvar</button>
-            </form>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="calendarDayModal">
-        <div class="modal">
             <div class="modal-header">
-                <h3 id="calDayTitle">Detalhes do Dia</h3>
+                <h3>Agendar Prova / Concurso</h3>
                 <button class="close-modal" onclick="app.closeModals()">&times;</button>
             </div>
-            <div id="calDayList" class="day-details-list">
+            <form id="formExam">
+                <div class="form-group">
+                    <label class="form-label">Nome da Prova</label>
+                    <input type="text" id="examName" class="form-input" placeholder="Ex: Concurso EBSERH" required>
                 </div>
-            <div style="margin-top: 1.5rem; text-align: center;">
-                <button class="btn btn-sm btn-outline" onclick="app.closeModals(); app.toggleFabMenu()">
-                    <i class="fas fa-plus"></i> Adicionar Novo Estudo
-                </button>
-            </div>
+                <div class="form-group">
+                    <label class="form-label">Data</label>
+                    <input type="date" id="examDate" class="form-input" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Salvar Prova</button>
+            </form>
         </div>
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
+        // --- BASE DE DADOS DE ASSUNTOS (INICIAL) ---
         const SUBJECTS_DATA_INITIAL = {
-            nursing: ["Saúde da Criança", "Imunização", "Saúde da Mulher", "Hipertensão", "Diabetes", "Saúde do Idoso", "Arboviroses", "Tuberculose e Hanseníase", "ISTs e HIV", "Fundamentos de Enfermagem", "Cálculo de Medicamentos", "Farmacologia", "Centro Cirúrgico", "Doenças Renais", "Doenças Respiratórias", "Cardiologia", "Oncologia", "Suporte Básico de Vida", "Urgência e Emergência", "UTI", "Saúde Mental", "Ética e Bioética", "Biossegurança"],
-            sus: ["História das Políticas de Saúde", "Constituição Federal (196-200)", "Lei 8.080/90", "Lei 8.142/90", "Decreto 7.508/11", "PNAB", "Vigilância em Saúde", "Redes de Atenção", "Humanização", "Financiamento do SUS"],
-            portuguese: ["Interpretação de Texto", "Ortografia", "Morfologia", "Sintaxe", "Pontuação", "Crase", "Concordância", "Regência", "Colocação Pronominal"],
-            logic: ["Lógica Proposicional", "Porcentagem", "Regra de Três", "Conjuntos", "Informática: Windows/Linux", "Informática: Word/Excel", "Segurança da Informação"]
+            nursing: [
+                "Saúde da Criança", "Imunização", "Saúde da Mulher", "Hipertensão", "Diabetes", "Saúde do Idoso",
+                "Arboviroses", "Tuberculose e Hanseníase", "ISTs e HIV", "Fundamentos de Enfermagem", 
+                "Cálculo de Medicamentos", "Farmacologia", "Centro Cirúrgico", "Doenças Renais", "Doenças Respiratórias",
+                "Cardiologia", "Oncologia", "Suporte Básico de Vida", "Urgência e Emergência", "UTI", 
+                "Saúde Mental", "Ética e Bioética", "Biossegurança"
+            ],
+            sus: [
+                "História das Políticas de Saúde", "Constituição Federal (196-200)", "Lei 8.080/90", 
+                "Lei 8.142/90", "Decreto 7.508/11", "PNAB", "Vigilância em Saúde", "Redes de Atenção",
+                "Humanização", "Financiamento do SUS"
+            ],
+            portuguese: [
+                "Interpretação de Texto", "Ortografia", "Morfologia", "Sintaxe", "Pontuação", "Crase", 
+                "Concordância", "Regência", "Colocação Pronominal"
+            ],
+            logic: [
+                "Lógica Proposicional", "Porcentagem", "Regra de Três", "Conjuntos", 
+                "Informática: Windows/Linux", "Informática: Word/Excel", "Segurança da Informação"
+            ]
         };
 
         class App {
@@ -533,28 +699,45 @@
                 this.data = this.loadData();
                 this.currentFilter = 'nursing';
                 this.isEditMode = false;
-                this.calendarView = 'month'; // 'month' or 'week'
                 this.init();
             }
 
+            // --- INICIALIZAÇÃO E DADOS ---
             getInitialData() {
                 const subjects = {};
                 let idCounter = 1;
                 for (const [block, list] of Object.entries(SUBJECTS_DATA_INITIAL)) {
-                    subjects[block] = list.map(name => ({ id: idCounter++, name: name, studied: false, totalTime: 0 }));
+                    subjects[block] = list.map(name => ({
+                        id: idCounter++,
+                        name: name,
+                        studied: false,
+                        totalTime: 0
+                    }));
                 }
-                return { subjects, studySessions: [], questions: [], reviews: [], exams: [], streak: { current: 0, lastDate: null } };
+
+                return {
+                    subjects: subjects,
+                    studySessions: [],
+                    questions: [],
+                    reviews: [],
+                    exams: [], // Feature 5: Novo array para provas
+                    streak: { current: 0, lastDate: null }
+                };
             }
 
             loadData() {
                 const saved = localStorage.getItem('enFFocusData_v2');
                 let parsed = saved ? JSON.parse(saved) : this.getInitialData();
+                
+                // Migração simples para quem já tinha dados e não tinha exams
                 if(!parsed.exams) parsed.exams = [];
+                
                 return parsed;
             }
 
             saveData() {
                 localStorage.setItem('enFFocusData_v2', JSON.stringify(this.data));
+                // Atualiza dashboard se estiver visível
                 if(document.getElementById('dashboard').classList.contains('active')) this.renderDashboard(); 
             }
 
@@ -565,12 +748,19 @@
                 this.renderDashboard();
                 this.renderSubjectsList();
                 this.renderReviews();
-                document.getElementById('studyDate').value = new Date().toISOString().split('T')[0];
+                
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('studyDate').value = today;
             }
 
+            // --- NAVEGAÇÃO ---
             navigate(pageId) {
                 document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-                const targetNav = Array.from(document.querySelectorAll('.nav-item')).find(el => el.getAttribute('onclick')?.includes(`'${pageId}'`));
+                const targetNav = Array.from(document.querySelectorAll('.nav-item'))
+                    .find(el => {
+                        const onclick = el.getAttribute('onclick');
+                        return onclick && onclick.includes(`'${pageId}'`);
+                    });
                 if(targetNav) targetNav.classList.add('active');
 
                 document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
@@ -580,26 +770,36 @@
                 if (pageId === 'questions') this.renderQuestionsHistory();
                 if (pageId === 'reviews') this.renderReviews();
                 if (pageId === 'calendar') this.renderCalendar();
-                if (pageId === 'dashboard') this.renderDashboard();
-                if(window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('active');
+                if (pageId === 'dashboard') this.renderDashboard(); // Re-render to update stats
+
+                if(window.innerWidth <= 768) {
+                    document.getElementById('sidebar').classList.remove('active');
+                }
             }
 
             setupNavigation() {}
 
             setupFilters() {
-                document.querySelectorAll('.filter-btn').forEach(btn => {
+                const buttons = document.querySelectorAll('.filter-btn');
+                buttons.forEach(btn => {
                     btn.addEventListener('click', () => {
-                        document.querySelectorAll('.filter-btn').forEach(b => { b.classList.remove('btn-primary'); b.classList.add('btn-outline'); });
-                        btn.classList.remove('btn-outline'); btn.classList.add('btn-primary');
+                        buttons.forEach(b => {
+                            b.classList.remove('btn-primary');
+                            b.classList.add('btn-outline');
+                        });
+                        btn.classList.remove('btn-outline');
+                        btn.classList.add('btn-primary');
+                        
                         this.currentFilter = btn.dataset.filter;
                         this.renderSubjectsList();
                     });
                 });
             }
 
-            // --- DASHBOARD ---
+            // --- DASHBOARD GERAL ---
             renderDashboard() {
                 const totalHours = this.data.studySessions.reduce((acc, s) => acc + s.duration, 0);
+                
                 let totalQ = 0, correctQ = 0;
                 this.data.questions.forEach(q => { totalQ += q.total; correctQ += q.correct; });
                 const accuracy = totalQ > 0 ? Math.round((correctQ / totalQ) * 100) : 0;
@@ -609,113 +809,172 @@
                 document.getElementById('dashAccuracy').innerText = accuracy + '%';
                 document.getElementById('dashStreak').innerText = this.data.streak.current;
 
-                // Foco Principal
-                let maxTime = 0, maxSubject = "Nenhum ainda";
+                // Feature 6: Calcular assunto mais estudado
+                let maxTime = 0;
+                let maxSubject = "Nenhum ainda";
+                
                 for(const block in this.data.subjects) {
                     this.data.subjects[block].forEach(sub => {
-                        if(sub.totalTime > maxTime) { maxTime = sub.totalTime; maxSubject = sub.name; }
+                        if(sub.totalTime > maxTime) {
+                            maxTime = sub.totalTime;
+                            maxSubject = sub.name;
+                        }
                     });
                 }
+                
                 document.getElementById('dashMostStudiedTime').innerText = maxTime > 0 ? maxTime.toFixed(1) + 'h' : '0h';
                 document.getElementById('dashMostStudiedName').innerText = maxSubject;
-                // Barra de progresso visual (arbitrário 10h = 100% para incentivo)
-                document.getElementById('dashMostStudiedBar').style.width = Math.min((maxTime / 10) * 100, 100) + '%';
 
-                // NOVO: Revisões de Hoje (Checklist)
-                const todayStr = new Date().toISOString().split('T')[0];
-                const todayReviews = this.data.reviews.filter(r => r.date === todayStr && !r.completed);
-                const reviewContainer = document.getElementById('dashTodayReviews');
-                document.getElementById('dashReviewCount').innerText = todayReviews.length;
-                
-                if(todayReviews.length === 0) {
-                    reviewContainer.innerHTML = '<div class="mini-check-empty">Tudo em dia! Nenhuma revisão hoje.</div>';
-                } else {
-                    reviewContainer.innerHTML = todayReviews.map(r => `
-                        <div class="mini-check-item">
-                            <input type="checkbox" class="checkbox-custom" style="width:16px; height:16px;" onchange="app.completeReview(${r.id})">
-                            <span>${r.subject}</span>
-                        </div>
-                    `).join('');
-                }
 
-                // Progresso Geral
                 const grid = document.getElementById('dashboardProgressGrid');
                 grid.innerHTML = '';
+                
                 const labels = { nursing: 'Enfermagem', sus: 'SUS', portuguese: 'Português', logic: 'Lógica' };
+                
                 for (const [key, label] of Object.entries(labels)) {
                     const subs = this.data.subjects[key];
+                    if(!subs) continue;
+                    
                     const studiedCount = subs.filter(s => s.studied).length;
                     const percent = Math.round((studiedCount / subs.length) * 100);
+                    
                     grid.innerHTML += `
                         <div class="subject-card" onclick="app.goToSubjectBlock('${key}')">
                             <h4 style="margin-bottom: 5px;">${label}</h4>
                             <p style="font-size: 0.8rem; color: var(--text-muted);">${studiedCount}/${subs.length} assuntos</p>
-                            <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${percent}%"></div></div>
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill" style="width: ${percent}%"></div>
+                            </div>
                         </div>
                     `;
                 }
             }
-
+            
             goToSubjectBlock(block) {
                 this.currentFilter = block;
                 const btn = document.querySelector(`.filter-btn[data-filter="${block}"]`);
-                document.querySelectorAll('.filter-btn').forEach(b => { b.classList.remove('btn-primary'); b.classList.add('btn-outline'); });
+                const allBtns = document.querySelectorAll('.filter-btn');
+                allBtns.forEach(b => { b.classList.remove('btn-primary'); b.classList.add('btn-outline'); });
                 if(btn) { btn.classList.remove('btn-outline'); btn.classList.add('btn-primary'); }
+                
                 this.navigate('study');
             }
 
             // --- ESTUDO ---
             toggleEditMode() {
                 this.isEditMode = !this.isEditMode;
-                document.getElementById('addSubjectContainer').style.display = this.isEditMode ? 'block' : 'none';
+                const btn = document.getElementById('toggleEditBtn');
+                const addBtn = document.getElementById('addSubjectContainer');
+                
+                if(this.isEditMode) {
+                    btn.classList.add('btn-primary');
+                    btn.classList.remove('btn-outline');
+                    addBtn.style.display = 'block';
+                } else {
+                    btn.classList.remove('btn-primary');
+                    btn.classList.add('btn-outline');
+                    addBtn.style.display = 'none';
+                }
                 this.renderSubjectsList();
             }
 
             renderSubjectsList() {
                 const container = document.getElementById('subjectsListContainer');
                 const list = this.data.subjects[this.currentFilter];
+                
+                if(!list) return;
+
                 container.innerHTML = list.map(sub => `
-                    <div class="list-item">
-                        <input type="checkbox" class="checkbox-custom" ${sub.studied ? 'checked' : ''} ${this.isEditMode ? 'disabled' : ''} onchange="app.toggleStudied('${this.currentFilter}', ${sub.id})">
+                    <div class="list-item ${this.isEditMode ? 'edit-mode' : ''}">
+                        <input type="checkbox" class="checkbox-custom" 
+                            ${sub.studied ? 'checked' : ''} 
+                            ${this.isEditMode ? 'disabled' : ''}
+                            onchange="app.toggleStudied('${this.currentFilter}', ${sub.id})">
+                        
                         <div style="flex:1">
                             <div style="font-weight: 600;">${sub.name}</div>
-                            <div style="font-size: 0.8rem; color: var(--text-muted);">Tempo total: ${sub.totalTime.toFixed(1)}h</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">
+                                Tempo total: ${sub.totalTime.toFixed(1)}h
+                            </div>
                         </div>
-                        ${this.isEditMode ? `<div style="display:flex; gap:10px;"><i class="fas fa-trash text-red" onclick="app.deleteSubject('${this.currentFilter}', ${sub.id})"></i></div>` : 
-                        `<button class="btn btn-sm btn-outline" onclick="app.openStudyModal('${this.currentFilter}', ${sub.id}, '${sub.name}')"><i class="fas fa-play"></i></button>`}
+
+                        ${this.isEditMode ? `
+                            <div class="edit-actions">
+                                <div class="btn-icon" onclick="app.renameSubject('${this.currentFilter}', ${sub.id})">
+                                    <i class="fas fa-pencil-alt" style="color: var(--primary)"></i>
+                                </div>
+                                <div class="btn-icon" onclick="app.deleteSubject('${this.currentFilter}', ${sub.id})">
+                                    <i class="fas fa-trash-alt text-red"></i>
+                                </div>
+                            </div>
+                        ` : `
+                            <button class="btn btn-sm btn-outline" onclick="app.openStudyModal('${this.currentFilter}', ${sub.id}, '${sub.name}')">
+                                <i class="fas fa-play"></i>
+                            </button>
+                        `}
                     </div>
                 `).join('');
             }
 
             addNewSubject() {
-                const name = prompt("Nome do assunto:");
-                if(name) {
-                    this.data.subjects[this.currentFilter].push({ id: Date.now(), name: name.trim(), studied: false, totalTime: 0 });
-                    this.saveData(); this.renderSubjectsList();
+                const name = prompt("Digite o nome do novo assunto:");
+                if(name && name.trim()) {
+                    const newId = Date.now();
+                    this.data.subjects[this.currentFilter].push({
+                        id: newId,
+                        name: name.trim(),
+                        studied: false,
+                        totalTime: 0
+                    });
+                    this.saveData();
+                    this.renderSubjectsList();
+                    this.showToast("Assunto adicionado!");
+                }
+            }
+
+            renameSubject(block, id) {
+                const sub = this.data.subjects[block].find(s => s.id === id);
+                if(sub) {
+                    const newName = prompt("Novo nome:", sub.name);
+                    if(newName && newName.trim()) {
+                        sub.name = newName.trim();
+                        this.saveData();
+                        this.renderSubjectsList();
+                    }
                 }
             }
 
             deleteSubject(block, id) {
-                if(confirm("Remover assunto?")) {
+                if(confirm("Tem certeza?")) {
                     this.data.subjects[block] = this.data.subjects[block].filter(s => s.id !== id);
-                    this.saveData(); this.renderSubjectsList();
+                    this.saveData();
+                    this.renderSubjectsList();
+                    this.showToast("Assunto removido.");
                 }
             }
 
             toggleStudied(block, id) {
                 const sub = this.data.subjects[block].find(s => s.id === id);
-                if(sub) { sub.studied = !sub.studied; this.saveData(); this.showToast('Atualizado!'); this.renderDashboard(); }
+                if(sub) {
+                    sub.studied = !sub.studied;
+                    this.saveData();
+                    this.showToast('Status atualizado!', 'success');
+                }
             }
 
             // --- QUESTÕES ---
             openQuestionModal() {
                 const select = document.getElementById('questionSubjectSelect');
-                select.innerHTML = '<option value="">Selecione...</option>';
+                select.innerHTML = '<option value="">Selecione o Assunto...</option>';
                 const labels = { nursing: 'Enfermagem', sus: 'SUS', portuguese: 'Português', logic: 'Lógica' };
                 for(const block in this.data.subjects) {
-                    const group = document.createElement('optgroup'); group.label = labels[block];
+                    const group = document.createElement('optgroup');
+                    group.label = labels[block];
                     this.data.subjects[block].forEach(s => {
-                        const opt = document.createElement('option'); opt.value = `${block}|${s.id}`; opt.textContent = s.name; group.appendChild(opt);
+                        const opt = document.createElement('option');
+                        opt.value = `${block}|${s.id}`;
+                        opt.textContent = s.name;
+                        group.appendChild(opt);
                     });
                     select.appendChild(group);
                 }
@@ -724,117 +983,318 @@
 
             renderQuestionsHistory() {
                 const container = document.getElementById('questionsHistoryList');
-                const filterSub = document.getElementById('qFilterSubject').value.toLowerCase();
+                
+                // Feature 3: Lógica de Filtros
+                const filterSubject = document.getElementById('qFilterSubject').value.toLowerCase();
                 const filterDate = document.getElementById('qFilterDate').value;
                 
-                let history = this.data.questions.filter(q => 
-                    q.subjectName.toLowerCase().includes(filterSub) && 
-                    (!filterDate || q.date.startsWith(filterDate))
-                ).reverse();
+                let history = [...this.data.questions].reverse();
 
-                if (history.length === 0) container.innerHTML = '<div style="padding:2rem; text-align:center">Vazio.</div>';
-                else {
-                    container.innerHTML = history.map(q => {
+                if(filterSubject) {
+                    history = history.filter(q => q.subjectName.toLowerCase().includes(filterSubject));
+                }
+                if(filterDate) {
+                    // filterDate vem como YYYY-MM-DD, questions.date é ISO
+                    history = history.filter(q => q.date.startsWith(filterDate));
+                }
+
+                if (history.length === 0) {
+                    container.innerHTML = '<div style="padding:2rem; text-align:center">Nenhum registro encontrado.</div>';
+                } else {
+                    container.innerHTML = history.map((q, index) => {
                         const percent = Math.round((q.correct / q.total) * 100);
-                        const colorClass = percent >= 80 ? 'tag-green' : (percent < 50 ? 'tag-red' : 'tag-blue');
-                        const qData = encodeURIComponent(JSON.stringify(q));
-                        return `<div class="list-item" onclick="app.openQuestionDetails('${qData}')">
-                            <div style="width:50px; text-align:center;"><span class="tag ${colorClass}">${percent}%</span></div>
-                            <div style="flex:1"><strong>${q.subjectName}</strong><br><small class="text-muted">${q.correct}/${q.total} • ${new Date(q.date).toLocaleDateString()}</small></div>
-                            <i class="fas fa-chevron-right text-muted"></i>
-                        </div>`;
+                        let colorClass = 'tag-blue';
+                        if (percent >= 80) colorClass = 'tag-green';
+                        if (percent < 50) colorClass = 'tag-red'; 
+                        
+                        // Usamos o índice reverso original ou ID se tivéssemos.
+                        // Como 'history' é filtrado, precisamos passar o objeto inteiro para abrir o modal
+                        // Codificamos o objeto em JSON no atributo data (para simplicidade)
+                        const qDataSafe = encodeURIComponent(JSON.stringify(q));
+
+                        return `
+                        <div class="list-item" onclick="app.openQuestionDetails('${qDataSafe}')">
+                            <div style="width: 60px; text-align: center;">
+                                <div class="tag ${colorClass}" style="display:inline-block; font-size: 0.9rem;">${percent}%</div>
+                            </div>
+                            <div style="flex:1">
+                                <div style="font-weight: 600;">${q.subjectName}</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">
+                                    ${q.correct} de ${q.total} acertos • ${new Date(q.date).toLocaleDateString()}
+                                </div>
+                            </div>
+                            <div style="color: var(--primary); font-size: 0.8rem;">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </div>
+                        `;
                     }).join('');
                 }
                 this.updateQuestionStats();
             }
-
-            openQuestionDetails(data) {
-                const q = JSON.parse(decodeURIComponent(data));
+            
+            // Feature 2: Abrir detalhes da questão
+            openQuestionDetails(qDataEncoded) {
+                const q = JSON.parse(decodeURIComponent(qDataEncoded));
                 const percent = Math.round((q.correct / q.total) * 100);
+                
+                let colorClass = 'tag-blue';
+                if (percent >= 80) colorClass = 'tag-green';
+                if (percent < 50) colorClass = 'tag-red';
+
                 document.getElementById('qdTitle').innerText = q.subjectName;
-                document.getElementById('qdContent').innerHTML = `
-                    <p class="text-muted">${new Date(q.date).toLocaleString()}</p>
-                    <div style="display:flex; gap:10px; margin:10px 0;">
-                        <span class="tag tag-blue">Total: ${q.total}</span>
-                        <span class="tag tag-green">Acertos: ${q.correct}</span>
-                        <span class="tag">${percent}%</span>
-                    </div>
-                    <div style="background:#f8fafc; padding:1rem; border-radius:10px; border:1px solid #e2e8f0;">${q.notes || 'Sem anotações.'}</div>
-                `;
+                document.getElementById('qdDate').innerText = new Date(q.date).toLocaleDateString() + ' às ' + new Date(q.date).toLocaleTimeString().slice(0,5);
+                document.getElementById('qdTotal').innerText = `Total: ${q.total}`;
+                document.getElementById('qdCorrect').innerText = `Acertos: ${q.correct}`;
+                document.getElementById('qdPercent').innerText = `Aproveitamento: ${percent}%`;
+                document.getElementById('qdPercent').className = `tag ${colorClass}`;
+                
+                const notes = q.notes ? q.notes : "<i>Sem anotações registradas.</i>";
+                document.getElementById('qdNotes').innerHTML = notes.replace(/\n/g, '<br>');
+                
                 document.getElementById('questionDetailsModal').classList.add('open');
             }
 
             updateQuestionStats() {
-                let total = 0, correct = 0, subStats = {};
-                this.data.questions.forEach(q => {
-                    total += q.total; correct += q.correct;
-                    if(!subStats[q.subjectName]) subStats[q.subjectName] = { t: 0, c: 0 };
-                    subStats[q.subjectName].t += q.total; subStats[q.subjectName].c += q.correct;
-                });
-                
-                document.getElementById('qDashRate').innerText = total ? Math.round((correct/total)*100)+'%' : '0%';
-                document.getElementById('qDashTotal').innerText = total;
+                let totalQ = 0, correctQ = 0;
+                let subjectStats = {};
 
-                let best = {n:'-', v:-1}, worst = {n:'-', v:101};
-                for(let k in subStats) {
-                    let r = (subStats[k].c / subStats[k].t) * 100;
-                    if(r > best.v) best = {n:k, v:r};
-                    if(r < worst.v) worst = {n:k, v:r};
-                }
-                if(best.v !== -1) {
-                    document.getElementById('qDashBestName').innerText = best.n;
-                    document.getElementById('qDashBestVal').innerText = Math.round(best.v) + '%';
-                    document.getElementById('qDashWorstName').innerText = worst.n;
-                    document.getElementById('qDashWorstVal').innerText = Math.round(worst.v) + '%';
+                this.data.questions.forEach(q => {
+                    totalQ += q.total;
+                    correctQ += q.correct;
+                    if(!subjectStats[q.subjectName]) subjectStats[q.subjectName] = { total: 0, correct: 0 };
+                    subjectStats[q.subjectName].total += q.total;
+                    subjectStats[q.subjectName].correct += q.correct;
+                });
+
+                const accuracy = totalQ > 0 ? Math.round((correctQ / totalQ) * 100) : 0;
+                document.getElementById('qDashRate').innerText = accuracy + '%';
+                document.getElementById('qDashTotal').innerText = totalQ;
+
+                let bestSub = { name: '-', rate: -1 };
+                let worstSub = { name: '-', rate: 101 };
+
+                Object.keys(subjectStats).forEach(key => {
+                    const s = subjectStats[key];
+                    const rate = (s.correct / s.total) * 100;
+                    if(rate > bestSub.rate) bestSub = { name: key, rate: rate };
+                    if(rate < worstSub.rate) worstSub = { name: key, rate: rate };
+                });
+
+                if(bestSub.rate !== -1) {
+                    document.getElementById('qDashBestName').innerText = bestSub.name;
+                    document.getElementById('qDashBestVal').innerText = Math.round(bestSub.rate) + '%';
+                    document.getElementById('qDashWorstName').innerText = worstSub.name;
+                    document.getElementById('qDashWorstVal').innerText = Math.round(worstSub.rate) + '%';
                 }
             }
-
+            
+            // Feature 1: Abrir modal de Ranking
             openPerformanceRanking() {
-                const subStats = {};
-                this.data.questions.forEach(q => {
-                    if(!subStats[q.subjectName]) subStats[q.subjectName] = { t: 0, c: 0 };
-                    subStats[q.subjectName].t += q.total; subStats[q.subjectName].c += q.correct;
-                });
-                const list = Object.keys(subStats).map(k => ({n:k, r: (subStats[k].c/subStats[k].t)*100, t: subStats[k].t})).sort((a,b)=>b.r - a.r);
+                const tbody = document.getElementById('rankingTableBody');
+                tbody.innerHTML = '';
                 
-                document.getElementById('rankingTableContainer').innerHTML = list.length ? `<table style="width:100%; border-collapse:collapse;">
-                    ${list.map(i => `<tr style="border-bottom:1px solid #eee;">
-                        <td style="padding:8px;">${i.n}</td>
-                        <td style="text-align:center;">${i.t}q</td>
-                        <td style="text-align:right; font-weight:bold; color:${i.r>=80?'var(--accent)':i.r<50?'var(--danger)':'#333'}">${Math.round(i.r)}%</td>
-                    </tr>`).join('')}</table>` : 'Sem dados.';
+                let subjectStats = {};
+                this.data.questions.forEach(q => {
+                    if(!subjectStats[q.subjectName]) subjectStats[q.subjectName] = { total: 0, correct: 0 };
+                    subjectStats[q.subjectName].total += q.total;
+                    subjectStats[q.subjectName].correct += q.correct;
+                });
+                
+                // Converte para array e ordena
+                const ranking = Object.keys(subjectStats).map(key => {
+                    return {
+                        name: key,
+                        total: subjectStats[key].total,
+                        rate: (subjectStats[key].correct / subjectStats[key].total) * 100
+                    };
+                }).sort((a, b) => b.rate - a.rate);
+                
+                if(ranking.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding: 1rem;">Sem dados ainda.</td></tr>';
+                } else {
+                    ranking.forEach(r => {
+                        let color = 'var(--text-main)';
+                        if(r.rate >= 80) color = 'var(--accent)';
+                        if(r.rate < 50) color = 'var(--danger)';
+                        
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>${r.name}</td>
+                                <td style="text-align:center;">${r.total}</td>
+                                <td style="text-align:right; font-weight:bold; color:${color}">${Math.round(r.rate)}%</td>
+                            </tr>
+                        `;
+                    });
+                }
+                
                 document.getElementById('rankingModal').classList.add('open');
             }
 
-            // --- REVISÕES ---
-            renderReviews() {
-                const pending = this.data.reviews.filter(r => !r.completed).sort((a,b) => new Date(a.date) - new Date(b.date));
-                const container = document.getElementById('reviewsList');
-                if(!pending.length) { container.innerHTML = '<div style="padding:2rem; text-align:center">Nenhuma revisão.</div>'; return; }
+            // --- FORMS & AÇÕES ---
+            setupForms() {
+                // Form Estudo
+                document.getElementById('formStudy').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const block = document.getElementById('studyBlockId').value;
+                    const id = parseInt(document.getElementById('studySubjectId').value);
+                    const duration = parseFloat(document.getElementById('studyDuration').value);
+                    const date = document.getElementById('studyDate').value;
+                    
+                    if (!duration || duration <= 0) return this.showToast('Insira um tempo válido', 'error');
+
+                    this.data.studySessions.push({
+                        date: date,
+                        block: block,
+                        subjectId: id,
+                        duration: duration
+                    });
+
+                    const sub = this.data.subjects[block].find(s => s.id === id);
+                    if(sub) {
+                        sub.totalTime += duration;
+                        sub.studied = true; 
+                        this.scheduleReview(sub.name, date); 
+                    }
+
+                    this.updateStreak(date);
+                    this.saveData();
+                    this.closeModals();
+                    this.showToast(`Estudo registrado! +${duration}h`, 'success');
+                    if (this.currentFilter === block) this.renderSubjectsList();
+                });
+
+                // Form Questões
+                document.getElementById('formQuestions').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const val = document.getElementById('questionSubjectSelect').value;
+                    if(!val) return this.showToast('Selecione um assunto', 'error');
+
+                    const [block, idStr] = val.split('|');
+                    const subject = this.data.subjects[block].find(s => s.id == idStr);
+                    
+                    const total = parseInt(document.getElementById('qTotal').value);
+                    const correct = parseInt(document.getElementById('qCorrect').value);
+
+                    if(correct > total) return this.showToast('Acertos > Total', 'error');
+
+                    this.data.questions.push({
+                        date: new Date().toISOString(),
+                        subjectName: subject.name,
+                        total: total,
+                        correct: correct,
+                        notes: document.getElementById('qNotes').value
+                    });
+
+                    this.saveData();
+                    this.closeModals();
+                    this.showToast('Questões salvas!', 'success');
+                    
+                    if(document.getElementById('questions').classList.contains('active')) {
+                        this.renderQuestionsHistory();
+                    } else {
+                        this.renderDashboard();
+                    }
+                });
                 
-                const today = new Date().toISOString().split('T')[0];
-                container.innerHTML = pending.map(r => {
-                    const color = r.date === today ? 'color:var(--warning);font-weight:bold;' : (r.date < today ? 'color:var(--danger);font-weight:bold;' : 'color:var(--text-muted)');
-                    return `<div class="list-item">
-                        <input type="checkbox" class="checkbox-custom" onchange="app.completeReview(${r.id})">
-                        <div style="flex:1"><strong>${r.subject}</strong><br><span style="font-size:0.8rem;${color}">${new Date(r.date+'T00:00').toLocaleDateString()} (${r.days}d)</span></div>
-                    </div>`;
-                }).join('');
-            }
-            
-            completeReview(id) {
-                const r = this.data.reviews.find(x => x.id === id);
-                if(r) { r.completed = true; this.saveData(); this.showToast('Concluído!'); this.renderReviews(); this.renderDashboard(); }
+                // Feature 5: Form Prova
+                document.getElementById('formExam').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const name = document.getElementById('examName').value;
+                    const date = document.getElementById('examDate').value;
+                    
+                    if(!name || !date) return;
+                    
+                    this.data.exams.push({ name, date });
+                    this.saveData();
+                    this.closeModals();
+                    this.showToast('Prova agendada!', 'success');
+                    this.renderCalendar();
+                });
             }
 
-            // --- CALENDÁRIO ATUALIZADO ---
-            openExamModal() { document.getElementById('examModal').classList.add('open'); }
-            
-            switchCalendarView(view) {
-                this.calendarView = view;
-                document.getElementById('btnViewMonth').className = view === 'month' ? 'cal-btn active' : 'cal-btn';
-                document.getElementById('btnViewWeek').className = view === 'week' ? 'cal-btn active' : 'cal-btn';
-                this.renderCalendar();
+            updateStreak(dateStr) {
+                const studyDate = new Date(dateStr + "T00:00:00").toISOString().split('T')[0];
+                const last = this.data.streak.lastDate;
+                if (last === studyDate) return; 
+                const today = new Date().toISOString().split('T')[0];
+                const yesterday = new Date(new Date().setDate(new Date().getDate()-1)).toISOString().split('T')[0];
+
+                if (studyDate === today || studyDate === yesterday) {
+                   if(last === yesterday) this.data.streak.current++;
+                   else if(last !== today) {
+                       if(this.data.streak.current === 0 || (studyDate === today && last !== yesterday)) this.data.streak.current = 1;
+                   }
+                }
+                if(!last) this.data.streak.current = 1;
+                this.data.streak.lastDate = studyDate;
+            }
+
+            scheduleReview(name, dateStr) {
+                const hasPending = this.data.reviews.some(r => r.subject === name && !r.completed);
+                if(hasPending) return;
+                const intervals = [1, 7, 30];
+                const baseDate = new Date(dateStr + "T00:00:00");
+                
+                intervals.forEach(days => {
+                    const revDate = new Date(baseDate);
+                    revDate.setDate(revDate.getDate() + days);
+                    this.data.reviews.push({
+                        id: Date.now() + Math.random(),
+                        subject: name,
+                        date: revDate.toISOString().split('T')[0],
+                        completed: false,
+                        days: days
+                    });
+                });
+            }
+
+            renderReviews() {
+                const container = document.getElementById('reviewsList');
+                const pending = this.data.reviews
+                    .filter(r => !r.completed)
+                    .sort((a, b) => new Date(a.date) - new Date(b.date));
+                
+                if(pending.length === 0) {
+                    container.innerHTML = '<div style="padding:2rem; text-align:center">Nenhuma revisão pendente.</div>';
+                    return;
+                }
+
+                const todayStr = new Date().toISOString().split('T')[0];
+                container.innerHTML = pending.map(r => {
+                    const isToday = r.date === todayStr;
+                    const isLate = r.date < todayStr;
+                    let dateStyle = "color: var(--text-muted)";
+                    if (isToday) dateStyle = "color: var(--warning); font-weight: bold;";
+                    if (isLate) dateStyle = "color: var(--danger); font-weight: bold;";
+
+                    return `
+                    <div class="list-item">
+                        <input type="checkbox" class="checkbox-custom" onchange="app.completeReview(${r.id})">
+                        <div style="flex:1">
+                            <div style="font-weight: 600;">${r.subject}</div>
+                            <div style="font-size: 0.8rem; ${dateStyle}">
+                                ${isLate ? 'Atrasado: ' : ''}${new Date(r.date + "T00:00:00").toLocaleDateString('pt-BR')} (${r.days}d)
+                            </div>
+                        </div>
+                    </div>
+                    `;
+                }).join('');
+            }
+
+            completeReview(id) {
+                const review = this.data.reviews.find(r => r.id === id);
+                if(review) {
+                    review.completed = true;
+                    this.saveData();
+                    this.showToast('Revisão concluída!', 'success');
+                    setTimeout(() => this.renderReviews(), 300);
+                }
+            }
+
+            // --- CALENDÁRIO ---
+            openExamModal() {
+                document.getElementById('examModal').classList.add('open');
             }
 
             renderCalendar() {
@@ -843,198 +1303,143 @@
                 grid.innerHTML = '';
                 
                 const now = new Date();
+                const currentMonth = now.getMonth();
+                const currentYear = now.getFullYear();
                 
-                let startDate, endDate, daysToRender;
+                const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+                title.innerText = `${monthNames[currentMonth]} ${currentYear}`;
                 
-                if (this.calendarView === 'month') {
-                    // Mês Atual
-                    const y = now.getFullYear(), m = now.getMonth();
-                    title.innerText = new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' }).format(now);
-                    
-                    const firstDay = new Date(y, m, 1).getDay(); 
-                    const daysInMonth = new Date(y, m + 1, 0).getDate();
-                    
-                    // Preencher vazios
-                    for(let i=0; i<firstDay; i++) grid.innerHTML += `<div class="calendar-day-cell empty"></div>`;
-                    
-                    startDate = 1; endDate = daysInMonth;
-                } else {
-                    // Semana Atual
-                    title.innerText = "Semana Atual";
-                    const currentDay = now.getDay(); // 0-6
-                    const diff = now.getDate() - currentDay; // Ajusta para Domingo
-                    const startOfWeek = new Date(now);
-                    startOfWeek.setDate(diff);
-                    
-                    // Renderiza 7 dias a partir do Domingo desta semana
-                    for (let i = 0; i < 7; i++) {
-                        const d = new Date(startOfWeek);
-                        d.setDate(startOfWeek.getDate() + i);
-                        this.renderDayCell(grid, d);
-                    }
-                    return; // Sai pois a lógica de loop do mês é diferente
-                }
-
-                // Loop do Mês
-                for(let i = startDate; i <= endDate; i++) {
-                    const d = new Date(now.getFullYear(), now.getMonth(), i);
-                    this.renderDayCell(grid, d);
-                }
-            }
-
-            renderDayCell(grid, dateObj) {
-                const dateStr = dateObj.toISOString().split('T')[0];
-                const dayNum = dateObj.getDate();
-                const now = new Date();
-                const isToday = (dateStr === now.toISOString().split('T')[0]);
-
-                // Dados
-                const studies = this.data.studySessions.filter(s => s.date === dateStr);
-                const reviews = this.data.reviews.filter(r => r.date === dateStr && !r.completed);
-                const exams = this.data.exams.filter(e => e.date === dateStr);
-
-                let html = `<div class="day-number">${dayNum}</div>`;
-                exams.forEach(e => html += `<div class="cal-event evt-exam">${e.name}</div>`);
-                if(studies.length) html += `<div class="cal-event evt-study">${studies.length} Estudo(s)</div>`;
-                if(reviews.length) html += `<div class="cal-event evt-review">${reviews.length} Revisões</div>`;
-
-                const div = document.createElement('div');
-                div.className = `calendar-day-cell ${isToday ? 'today' : ''}`;
-                div.innerHTML = html;
-                div.onclick = () => this.openCalendarDay(dateStr);
-                grid.appendChild(div);
-            }
-
-            // NOVO: Abrir Modal do Dia
-            openCalendarDay(dateStr) {
-                const studies = this.data.studySessions.filter(s => s.date === dateStr);
-                const reviews = this.data.reviews.filter(r => r.date === dateStr && !r.completed);
-                const exams = this.data.exams.filter(e => e.date === dateStr);
-
-                const dateObj = new Date(dateStr + "T00:00:00");
-                document.getElementById('calDayTitle').innerText = dateObj.toLocaleDateString('pt-BR', {weekday: 'long', day: 'numeric', month: 'long'});
+                const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay(); 
+                const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
                 
-                const container = document.getElementById('calDayList');
-                
-                if(!studies.length && !reviews.length && !exams.length) {
-                    container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:1rem;">Nada agendado para este dia.</div>';
-                } else {
-                    let html = '';
-                    
-                    if(exams.length) {
-                        html += '<h5 style="margin:10px 0;">Provas / Eventos</h5>';
-                        exams.forEach(e => html += `<div class="day-event-item type-exam"><strong>${e.name}</strong></div>`);
-                    }
-
-                    if(reviews.length) {
-                        html += '<h5 style="margin:10px 0;">Revisões Pendentes</h5>';
-                        reviews.forEach(r => html += `<div class="day-event-item type-review">${r.subject} (${r.days} dias)</div>`);
-                    }
-
-                    if(studies.length) {
-                        html += '<h5 style="margin:10px 0;">Estudos Realizados</h5>';
-                        studies.forEach(s => {
-                            const sub = this.data.subjects[s.block].find(x => x.id === s.subjectId);
-                            html += `<div class="day-event-item type-study"><strong>${sub ? sub.name : 'Assunto'}</strong><br><small>${s.duration}h</small></div>`;
-                        });
-                    }
-                    container.innerHTML = html;
+                for(let i = 0; i < firstDayOfMonth; i++) {
+                    grid.innerHTML += `<div class="calendar-day-cell empty"></div>`;
                 }
                 
-                // Atualiza data do form de estudo caso queira adicionar nesse dia
-                document.getElementById('studyDate').value = dateStr;
-                document.getElementById('calendarDayModal').classList.add('open');
-            }
-
-            // --- UTILS & FORMS ---
-            setupForms() {
-                document.getElementById('formStudy').addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    const block = document.getElementById('studyBlockId').value;
-                    const id = parseInt(document.getElementById('studySubjectId').value);
-                    const dur = parseFloat(document.getElementById('studyDuration').value);
-                    const date = document.getElementById('studyDate').value;
-
-                    this.data.studySessions.push({ date, block, subjectId: id, duration: dur });
-                    const sub = this.data.subjects[block].find(s => s.id === id);
-                    if(sub) { sub.totalTime += dur; sub.studied = true; this.scheduleReview(sub.name, date); }
+                for(let i = 1; i <= daysInMonth; i++) {
+                    const dateStr = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
                     
-                    this.updateStreak(date); this.saveData(); this.closeModals(); this.showToast(`Registrado! +${dur}h`);
-                    if(this.currentFilter === block) this.renderSubjectsList();
-                });
-
-                document.getElementById('formQuestions').addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    const val = document.getElementById('questionSubjectSelect').value;
-                    if(!val) return;
-                    const [block, id] = val.split('|');
-                    const sub = this.data.subjects[block].find(s => s.id == id);
-                    const t = parseInt(document.getElementById('qTotal').value);
-                    const c = parseInt(document.getElementById('qCorrect').value);
+                    // Coleta eventos
+                    const studySessions = this.data.studySessions.filter(s => s.date === dateStr);
+                    const reviews = this.data.reviews.filter(r => r.date === dateStr && !r.completed);
+                    const exams = this.data.exams ? this.data.exams.filter(e => e.date === dateStr) : [];
                     
-                    this.data.questions.push({ date: new Date().toISOString(), subjectName: sub.name, total: t, correct: c, notes: document.getElementById('qNotes').value });
-                    this.saveData(); this.closeModals(); this.showToast('Salvo!'); this.renderDashboard();
-                });
+                    let eventsHtml = '';
+                    
+                    // Feature 4: Mostra nome das provas e resumos
+                    exams.forEach(e => {
+                        eventsHtml += `<div class="cal-event evt-exam">${e.name}</div>`;
+                    });
+                    
+                    // Para estudos, agrupa ou mostra nome se for pouco
+                    if(studySessions.length > 0) {
+                        // Pega o nome do primeiro assunto estudado no dia
+                        const firstSubId = studySessions[0].subjectId;
+                        const block = studySessions[0].block;
+                        const sub = this.data.subjects[block].find(s => s.id === firstSubId);
+                        const name = sub ? sub.name : 'Estudo';
+                        const countText = studySessions.length > 1 ? ` (+${studySessions.length-1})` : '';
+                        eventsHtml += `<div class="cal-event evt-study">${name}${countText}</div>`;
+                    }
+                    
+                    if(reviews.length > 0) {
+                        eventsHtml += `<div class="cal-event evt-review">${reviews.length} Revisões</div>`;
+                    }
+                    
+                    const isToday = (i === now.getDate() && currentMonth === now.getMonth() && currentYear === now.getFullYear());
 
-                document.getElementById('formExam').addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    this.data.exams.push({ name: document.getElementById('examName').value, date: document.getElementById('examDate').value });
-                    this.saveData(); this.closeModals(); this.showToast('Prova agendada!'); this.renderCalendar();
-                });
-            }
-
-            scheduleReview(name, dateStr) {
-                const base = new Date(dateStr + "T00:00:00");
-                [1, 7, 30].forEach(d => {
-                    const rDate = new Date(base); rDate.setDate(rDate.getDate() + d);
-                    this.data.reviews.push({ id: Date.now()+Math.random(), subject: name, date: rDate.toISOString().split('T')[0], completed: false, days: d });
-                });
-            }
-
-            updateStreak(date) {
-                const last = this.data.streak.lastDate;
-                const today = new Date().toISOString().split('T')[0];
-                const yest = new Date(new Date().setDate(new Date().getDate()-1)).toISOString().split('T')[0];
-                if(date === today || date === yest) {
-                    if(last === yest) this.data.streak.current++;
-                    else if(last !== today) this.data.streak.current = 1;
+                    grid.innerHTML += `
+                        <div class="calendar-day-cell ${isToday ? 'today' : ''}">
+                            <div class="day-number">${i}</div>
+                            ${eventsHtml}
+                        </div>
+                    `;
                 }
-                this.data.streak.lastDate = date;
+            }
+
+            // --- UTILITÁRIOS ---
+            openStudyModal(block, id, name) {
+                document.getElementById('studyBlockId').value = block;
+                document.getElementById('studySubjectId').value = id;
+                document.getElementById('studySubjectName').value = name;
+                document.getElementById('studyDuration').value = '';
+                document.getElementById('studyModal').classList.add('open');
             }
 
             closeModals() {
                 document.querySelectorAll('.modal-overlay').forEach(el => el.classList.remove('open'));
-                document.getElementById('formStudy').reset(); document.getElementById('formQuestions').reset(); document.getElementById('formExam').reset();
+                document.getElementById('formStudy').reset();
+                document.getElementById('formQuestions').reset();
+                document.getElementById('formExam').reset();
+                document.getElementById('studyDate').value = new Date().toISOString().split('T')[0];
             }
 
-            showToast(msg) {
-                const t = document.createElement('div'); t.className = 'toast success'; t.innerHTML = `<i class="fas fa-check"></i> ${msg}`;
-                document.getElementById('toastContainer').appendChild(t);
-                setTimeout(() => t.remove(), 3000);
+            showToast(msg, type = 'success') {
+                const container = document.getElementById('toastContainer');
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.innerHTML = `
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+                    <span>${msg}</span>
+                `;
+                container.appendChild(toast);
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 300);
+                }, 3000);
             }
 
-            toggleFabMenu() { this.navigate('study'); this.showToast('Selecione um assunto'); }
+            toggleFabMenu() {
+                this.navigate('study');
+                this.showToast('Selecione um assunto para registrar');
+            }
             
             exportData() {
+                const dataStr = JSON.stringify(this.data);
+                const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
                 const link = document.createElement('a');
-                link.href = 'data:application/json;charset=utf-8,'+ encodeURIComponent(JSON.stringify(this.data));
-                link.download = `enffocus_bkp_${new Date().toISOString().slice(0,10)}.json`; link.click();
+                link.setAttribute('href', dataUri);
+                link.setAttribute('download', `enffocus_backup_${new Date().toISOString().slice(0,10)}.json`);
+                link.click();
             }
 
             importData(input) {
-                const r = new FileReader();
-                r.onload = e => { 
-                    try { this.data = JSON.parse(e.target.result); this.saveData(); location.reload(); } 
-                    catch(err) { alert('Erro no arquivo'); } 
+                const file = input.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const json = JSON.parse(e.target.result);
+                        if(json.subjects && json.studySessions) {
+                            this.data = json;
+                            this.saveData();
+                            alert('Dados restaurados com sucesso!');
+                            location.reload();
+                        } else {
+                            alert('Arquivo inválido!');
+                        }
+                    } catch (err) {
+                        alert('Erro ao ler arquivo.');
+                    }
                 };
-                if(input.files[0]) r.readAsText(input.files[0]);
+                reader.readAsText(file);
             }
-            
-            resetData() { if(confirm('Apagar tudo?')) { localStorage.removeItem('enFFocusData_v2'); location.reload(); } }
+
+            resetData() {
+                if(confirm('Tem certeza? Isso apagará todo seu progresso.')) {
+                    localStorage.removeItem('enFFocusData_v2');
+                    location.reload();
+                }
+            }
         }
 
         const app = new App();
-        window.onclick = e => { if(e.target.classList.contains('modal-overlay')) app.closeModals(); }
+
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal-overlay')) {
+                app.closeModals();
+            }
+        }
     </script>
 </body>
 </html>

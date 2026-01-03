@@ -3,31 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>enFFocus 2.8 | Study Suite</title>
+    <title>enFFocus 3.3 | Suite Completa</title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
         :root {
-            --bg-body: #f3f6f9;
+            --bg-body: #f8fafc;
             --bg-sidebar: #ffffff;
             --bg-card: #ffffff;
             
-            --primary: #3b82f6;
-            --primary-dark: #1d4ed8;
+            --primary: #2563eb;
             --primary-light: #eff6ff;
+            --primary-hover: #1d4ed8;
             
-            --accent: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --pink: #ec4899;
-            --purple: #8b5cf6;
-            
+            --accent: #10b981; /* Sucesso */
+            --warning: #f59e0b; /* Atenção */
+            --danger: #ef4444; /* Erro */
             --text-main: #1e293b;
             --text-muted: #64748b;
             --border: #e2e8f0;
             --radius: 16px;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; outline: none; font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -35,109 +34,124 @@
 
         /* --- Sidebar --- */
         .sidebar { width: 260px; background: var(--bg-sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 1.5rem; transition: transform 0.3s ease; z-index: 50; }
-        .brand { display: flex; align-items: center; gap: 12px; font-size: 1.5rem; font-weight: 700; color: var(--primary); margin-bottom: 2.5rem; cursor: pointer; }
-        .nav-item { padding: 12px 16px; border-radius: 12px; cursor: pointer; color: var(--text-muted); font-weight: 500; display: flex; align-items: center; gap: 12px; transition: 0.2s; margin-bottom: 5px; }
+        .brand { display: flex; align-items: center; gap: 12px; font-size: 1.5rem; font-weight: 800; color: var(--primary); margin-bottom: 2.5rem; cursor: pointer; letter-spacing: -0.5px; }
+        .nav-item { padding: 12px 16px; border-radius: 12px; cursor: pointer; color: var(--text-muted); font-weight: 600; display: flex; align-items: center; gap: 12px; transition: 0.2s; margin-bottom: 5px; font-size: 0.95rem; }
         .nav-item:hover { background-color: var(--primary-light); color: var(--primary); }
-        .nav-item.active { background-color: var(--primary); color: white; box-shadow: var(--shadow); }
+        .nav-item.active { background-color: var(--primary); color: white; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); }
 
-        /* --- Main Content --- */
+        /* --- Main --- */
         .main { flex: 1; overflow-y: auto; padding: 2rem; position: relative; }
         .header-mobile { display: none; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .section { display: none; animation: fadeIn 0.4s ease; }
         .section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- Cards & Grid --- */
+        /* --- Components --- */
         .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        
         .card { background: var(--bg-card); border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow); border: 1px solid var(--border); transition: 0.2s; display: flex; flex-direction: column; }
-        .card:hover { transform: translateY(-2px); border-color: var(--primary); }
+        .card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); border-color: var(--primary-light); }
         .card-wide { grid-column: span 2; }
         @media (max-width: 1000px) { .card-wide { grid-column: span 1; } }
 
         .stat-card { flex-direction: row; align-items: center; gap: 1rem; }
         .clickable-card { cursor: pointer; }
-
-        .stat-icon { width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+        .stat-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0; }
+        
         .bg-blue { background: #dbeafe; color: #2563eb; }
         .bg-green { background: #d1fae5; color: #059669; }
         .bg-orange { background: #ffedd5; color: #ea580c; }
         .bg-purple { background: #f3e8ff; color: #9333ea; }
         .bg-pink { background: #fce7f3; color: #db2777; }
 
-        .stat-info h3 { font-size: 1.5rem; font-weight: 700; line-height: 1; margin-bottom: 4px; }
-        .stat-info p { font-size: 0.8rem; color: var(--text-muted); }
+        .stat-info h3 { font-size: 1.6rem; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+        .stat-info p { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
 
-        /* --- Checklist --- */
-        .mini-checklist { margin-top: 10px; max-height: 120px; overflow-y: auto; display: flex; flex-direction: column; gap: 5px; }
-        .mini-check-item { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; padding: 6px; border-radius: 8px; transition: 0.2s; cursor: pointer; }
-        .mini-check-item:hover { background: #f8fafc; }
-        .text-strike { text-decoration: line-through; color: var(--text-muted); opacity: 0.7; }
+        /* Checklist */
+        .mini-checklist { margin-top: 10px; max-height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 5px; }
+        .mini-check-item { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; padding: 8px; border-radius: 8px; transition: 0.2s; cursor: pointer; border: 1px solid transparent; }
+        .mini-check-item:hover { background: #f8fafc; border-color: var(--border); }
+        .text-strike { text-decoration: line-through; color: var(--text-muted); opacity: 0.6; }
 
-        .subjects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; }
+        /* Subject Blocks */
+        .subjects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
         .subject-card { background: white; padding: 1.2rem; border-radius: var(--radius); border: 1px solid var(--border); cursor: pointer; transition: 0.2s; position: relative; overflow: hidden; }
         .subject-card:hover { transform: translateY(-3px); border-color: var(--primary); }
-        .progress-bar { background: #e2e8f0; height: 6px; border-radius: 3px; margin-top: 10px; overflow: hidden; }
+        .progress-bar { background: #e2e8f0; height: 6px; border-radius: 3px; margin-top: 12px; overflow: hidden; }
         .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: width 1s ease; }
 
-        .list-container { background: white; border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
-        .list-item { display: flex; align-items: center; padding: 1rem; border-bottom: 1px solid var(--border); gap: 1rem; cursor: pointer; transition: 0.2s; }
+        /* Lists & Tables */
+        .list-container { background: white; border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; box-shadow: var(--shadow); }
+        .list-item { display: flex; align-items: center; padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); gap: 1rem; cursor: pointer; transition: 0.2s; }
         .list-item:hover { background: #f8fafc; }
         .list-item:last-child { border-bottom: none; }
 
-        /* --- Calendar --- */
-        .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-        .cal-controls { display: flex; background: white; border: 1px solid var(--border); border-radius: 8px; padding: 2px; }
-        .cal-view-btn { border: none; background: transparent; padding: 6px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); cursor: pointer; }
-        .cal-view-btn.active { background: var(--primary-light); color: var(--primary); }
+        .blocks-header { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding: 1rem; align-items: center; }
+        
+        .table-simple { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        .table-simple th { text-align: left; padding: 10px; border-bottom: 2px solid var(--border); color: var(--text-muted); }
+        .table-simple td { padding: 10px; border-bottom: 1px solid var(--border); }
 
-        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
-        .cal-grid-head { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: 600; color: var(--text-muted); margin-bottom: 0.5rem; }
-        .cal-day { background: white; border: 1px solid var(--border); border-radius: 8px; min-height: 100px; padding: 5px; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; overflow: hidden; }
-        .cal-day:hover { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-light); }
-        .cal-day.today { background: #eff6ff; border-color: var(--primary); }
+        /* Calendar */
+        .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 15px; }
+        .cal-nav { display: flex; align-items: center; gap: 10px; background: white; padding: 5px; border-radius: 12px; border: 1px solid var(--border); }
+        .cal-nav h2 { min-width: 150px; text-align: center; font-size: 1.1rem; text-transform: capitalize; margin: 0; }
+        .nav-btn { background: transparent; border: none; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; color: var(--text-muted); }
+        .nav-btn:hover { background: var(--primary-light); color: var(--primary); }
+
+        .cal-controls { display: flex; background: white; border: 1px solid var(--border); border-radius: 10px; padding: 3px; }
+        .cal-view-btn { border: none; background: transparent; padding: 6px 14px; border-radius: 7px; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); cursor: pointer; }
+        .cal-view-btn.active { background: var(--primary-light); color: var(--primary); }
+        
+        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+        .cal-grid-head { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: 600; color: var(--text-muted); margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .cal-day { background: white; border: 1px solid var(--border); border-radius: 10px; min-height: 100px; padding: 6px; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; overflow: hidden; }
+        .cal-day:hover { border-color: var(--primary); box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1); }
+        .cal-day.today { background: #eff6ff; border-color: var(--primary); border-width: 2px; }
         .cal-day.empty { background: transparent; border: none; cursor: default; }
         
         .day-num { font-weight: 700; font-size: 0.9rem; margin-bottom: 4px; }
-        .evt-tag { font-size: 0.65rem; padding: 2px 4px; border-radius: 4px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .evt-tag { font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; }
         .evt-study { background: #dbeafe; color: #1e40af; }
         .evt-review { background: #ffedd5; color: #9a3412; }
-        .evt-exam { background: #fee2e2; color: #991b1b; font-weight: bold; }
+        .evt-exam { background: #fee2e2; color: #991b1b; }
 
-        /* --- Modals --- */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(3px); display: none; align-items: center; justify-content: center; z-index: 100; opacity: 0; transition: opacity 0.3s; }
+        /* Modals */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 100; opacity: 0; transition: opacity 0.3s; }
         .modal-overlay.open { display: flex; opacity: 1; }
         .modal { background: white; width: 90%; max-width: 500px; max-height: 85vh; border-radius: 20px; padding: 2rem; overflow-y: auto; transform: scale(0.95); transition: 0.3s; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
         .modal-overlay.open .modal { transform: scale(1); }
+        
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-        .close-btn { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-muted); }
+        .close-btn { background: transparent; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-muted); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.2s; }
+        .close-btn:hover { background-color: #f1f5f9; color: var(--danger); }
 
         .form-group { margin-bottom: 1rem; }
-        .form-label { display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.9rem; }
-        .form-input, .form-select, .form-textarea { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 10px; font-family: inherit; }
-        .btn { padding: 10px 20px; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-family: inherit; transition: 0.2s; }
+        .form-label { display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem; color: var(--text-main); }
+        .form-input, .form-select, .form-textarea { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 0.95rem; transition: 0.2s; }
+        .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
+        
+        .btn { padding: 10px 20px; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-family: inherit; transition: 0.2s; white-space: nowrap; font-size: 0.9rem; }
         .btn-primary { background: var(--primary); color: white; }
-        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
-        .btn-sm { padding: 6px 12px; font-size: 0.85rem; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-outline { background: white; border: 1px solid var(--border); color: var(--text-main); }
+        .btn-outline:hover { background: #f8fafc; border-color: #cbd5e1; }
+        .btn-sm { padding: 8px 14px; font-size: 0.85rem; }
 
-        /* Day Detail List */
-        .day-detail-item { padding: 10px; border-radius: 8px; margin-bottom: 8px; background: #f8fafc; border-left: 4px solid #ccc; }
+        .chart-container { position: relative; height: 300px; width: 100%; }
+        .day-detail-item { padding: 12px; border-radius: 10px; margin-bottom: 10px; background: #f8fafc; border-left: 4px solid #ccc; font-size: 0.9rem; }
         .type-study { border-color: var(--primary); }
         .type-review { border-color: var(--warning); }
         .type-exam { border-color: var(--danger); background: #fef2f2; }
-        
-        /* Table Simple */
-        .table-simple { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-        .table-simple th { text-align: left; padding: 8px; border-bottom: 2px solid var(--border); color: var(--text-muted); }
-        .table-simple td { padding: 8px; border-bottom: 1px solid var(--border); }
 
         /* Toast */
         .toast-container { position: fixed; top: 20px; right: 20px; z-index: 200; display: flex; flex-direction: column; gap: 10px; }
-        .toast { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border-left: 5px solid var(--primary); display: flex; gap: 10px; align-items: center; animation: slideIn 0.3s; }
+        .toast { background: white; padding: 16px 20px; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); border-left: 5px solid var(--primary); display: flex; gap: 12px; align-items: center; animation: slideIn 0.3s; font-weight: 500; }
         .toast.success { border-left-color: var(--accent); }
         @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
 
         /* Tags */
-        .tag { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        .tag { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
         .tag-green { background: #dcfce7; color: #16a34a; }
         .tag-blue { background: #e0f2fe; color: #0284c7; }
         .tag-red { background: #fee2e2; color: #dc2626; }
@@ -178,7 +192,11 @@
         </div>
 
         <section id="dashboard" class="section active">
-            <h2 style="margin-bottom: 1.5rem;">Resumo Geral</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 style="font-weight: 700;">Resumo Geral</h2>
+                <button class="btn btn-sm btn-primary" onclick="app.openImportModal()"><i class="fas fa-plus"></i> Novo Bloco</button>
+            </div>
+            
             <div class="dashboard-grid">
                 <div class="card stat-card clickable-card" onclick="app.openTotalHoursModal()">
                     <div class="stat-icon bg-blue"><i class="fas fa-clock"></i></div>
@@ -197,49 +215,51 @@
                     <div class="stat-info"><h3 id="dashQuestions">0</h3><p>Questões</p></div>
                 </div>
 
-                <div class="card card-wide">
+                <div class="card card-wide" style="justify-content: center;">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <div style="display:flex; gap:10px; align-items:center;">
-                            <div class="stat-icon bg-pink" style="width:35px; height:35px; font-size:1rem;"><i class="fas fa-stopwatch"></i></div>
-                            <div><span style="font-size:0.8rem; color:var(--text-muted)">Foco Principal</span><h4 id="dashMostStudiedName" style="margin:0">-</h4></div>
+                        <div style="display:flex; gap:12px; align-items:center;">
+                            <div class="stat-icon bg-pink"><i class="fas fa-stopwatch"></i></div>
+                            <div>
+                                <span style="font-size:0.8rem; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Foco Principal</span>
+                                <h4 id="dashMostStudiedName" style="margin:0; font-size:1.1rem;">-</h4>
+                            </div>
                         </div>
-                        <h3 id="dashMostStudiedTime">0h</h3>
+                        <div style="text-align:right;">
+                            <h3 id="dashMostStudiedTime" style="color:var(--primary);">0h</h3>
+                        </div>
                     </div>
-                    <div class="progress-bar"><div id="dashMostStudiedBar" class="progress-fill"></div></div>
                 </div>
 
                 <div class="card card-wide">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                         <div style="display:flex; gap:10px; align-items:center;">
-                            <div class="stat-icon bg-orange" style="width:35px; height:35px; font-size:1rem;"><i class="fas fa-clipboard-check"></i></div>
-                            <h4 style="margin:0;">Revisões de Hoje</h4>
+                            <div class="stat-icon bg-orange" style="width:36px; height:36px; font-size:1rem;"><i class="fas fa-clipboard-check"></i></div>
+                            <h4 style="margin:0; font-size:1rem;">Revisões de Hoje</h4>
                         </div>
-                        <span id="dashReviewCount" style="font-weight:bold; color:var(--warning)">0</span>
+                        <span id="dashReviewCount" style="font-weight:bold; color:var(--warning); background:#fff7ed; padding:2px 8px; border-radius:10px; font-size:0.8rem;">0</span>
                     </div>
                     <div class="mini-checklist" id="dashTodayReviews"></div>
                 </div>
             </div>
-
-            <h3 style="margin-bottom: 1rem;">Progresso por Área</h3>
+            
+            <h3 style="margin-bottom: 1rem; font-size:1.1rem;">Progresso por Área</h3>
             <div class="subjects-grid" id="dashProgressGrid"></div>
         </section>
 
         <section id="study" class="section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
                 <h2>Blocos de Estudo</h2>
-                <button class="btn btn-sm btn-outline" id="toggleEditBtn" onclick="app.toggleEditMode()"><i class="fas fa-cog"></i> Editar</button>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn btn-sm btn-primary" onclick="app.openImportModal()"><i class="fas fa-file-import"></i> Criar/Importar</button>
+                    <button class="btn btn-sm btn-outline" id="toggleEditBtn" onclick="app.toggleEditMode()"><i class="fas fa-cog"></i> Editar</button>
+                </div>
             </div>
             
             <div class="list-container">
-                <div style="padding: 1rem; border-bottom: 1px solid var(--border); display: flex; gap: 8px; flex-wrap: wrap;">
-                    <button class="btn btn-sm btn-primary filter-btn" data-filter="nursing">Enfermagem</button>
-                    <button class="btn btn-sm btn-outline filter-btn" data-filter="sus">SUS</button>
-                    <button class="btn btn-sm btn-outline filter-btn" data-filter="portuguese">Português</button>
-                    <button class="btn btn-sm btn-outline filter-btn" data-filter="logic">Lógica</button>
-                </div>
+                <div class="blocks-header" id="blocksFilterContainer"></div>
                 <div id="subjectsListContainer"></div>
-                <div id="addSubjectContainer" style="padding: 1rem; border-top: 1px solid var(--border); display: none;">
-                    <button class="btn btn-sm btn-outline" style="width: 100%; border-style: dashed;" onclick="app.addNewSubject()"><i class="fas fa-plus"></i> Novo Assunto</button>
+                <div id="addSubjectContainer" style="padding: 1rem; border-top: 1px solid var(--border); display: none; text-align:center;">
+                    <button class="btn btn-sm btn-outline" style="border-style: dashed;" onclick="app.addNewSubject()"><i class="fas fa-plus"></i> Novo Assunto Individual</button>
                 </div>
             </div>
         </section>
@@ -262,29 +282,45 @@
                 <div class="card stat-card card-wide clickable-card" onclick="app.openRankingModal()">
                     <div class="stat-icon bg-purple"><i class="fas fa-trophy"></i></div>
                     <div class="stat-info" style="flex:1">
-                        <div style="display:flex; justify-content:space-between;"><span style="font-size:0.8rem">Melhor</span><strong id="qDashBestVal" style="color:var(--accent)">-</strong></div>
-                        <h4 id="qDashBestName" style="font-size:1rem; margin-bottom:5px">-</h4>
-                        <div style="display:flex; justify-content:space-between; border-top:1px solid #eee; padding-top:2px"><span style="font-size:0.8rem">Atenção</span><strong id="qDashWorstVal" style="color:var(--danger)">-</strong></div>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span style="font-size:0.8rem; font-weight:600; color:var(--text-muted);">Melhor</span><strong id="qDashBestVal" style="color:var(--accent)">-</strong></div>
+                        <h4 id="qDashBestName" style="font-size:1rem; margin-bottom:8px">-</h4>
+                        <div style="display:flex; justify-content:space-between; border-top:1px solid #eee; padding-top:4px;"><span style="font-size:0.8rem; font-weight:600; color:var(--text-muted);">Atenção</span><strong id="qDashWorstVal" style="color:var(--danger)">-</strong></div>
                         <h4 id="qDashWorstName" style="font-size:1rem">-</h4>
                     </div>
+                </div>
+            </div>
+            
+            <div class="card" style="margin-bottom: 2rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap; gap:10px;">
+                    <h4 style="margin:0;"><i class="fas fa-chart-line"></i> Evolução de Desempenho</h4>
+                    <select id="chartSubjectSelector" class="form-select" style="width:auto; min-width:220px;" onchange="app.updateEvolutionChart()">
+                        <option value="">Selecione um assunto...</option>
+                    </select>
+                </div>
+                <div class="chart-container">
+                    <canvas id="evolutionChart"></canvas>
                 </div>
             </div>
 
             <div style="display: flex; gap: 10px; margin-bottom: 1rem;">
                 <input type="text" id="qFilterSubject" class="form-input" placeholder="Filtrar por assunto..." onkeyup="app.renderQuestionsHistory()">
-                <input type="date" id="qFilterDate" class="form-input" style="width: 150px;" onchange="app.renderQuestionsHistory()">
+                <input type="date" id="qFilterDate" class="form-input" style="width: 160px;" onchange="app.renderQuestionsHistory()">
             </div>
             <div class="list-container" id="questionsHistoryList"></div>
         </section>
 
         <section id="reviews" class="section">
             <h2>Revisões Pendentes</h2>
-            <div class="list-container" id="reviewsList"></div>
+            <div class="list-container" id="reviewsList" style="margin-top:1.5rem;"></div>
         </section>
 
         <section id="calendar" class="section">
             <div class="cal-header">
-                <h2 id="calTitle">Calendário</h2>
+                <div class="cal-nav">
+                    <button class="nav-btn" onclick="app.changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
+                    <h2 id="calTitle">Mês</h2>
+                    <button class="nav-btn" onclick="app.changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
+                </div>
                 <div style="display: flex; gap: 10px; align-items: center;">
                     <div class="cal-controls">
                         <button class="cal-view-btn active" id="btnViewMonth" onclick="app.setCalView('month')">Mês</button>
@@ -300,9 +336,20 @@
         </section>
     </main>
 
+    <div class="modal-overlay" id="importModal">
+        <div class="modal">
+            <div class="modal-header"><h3>Criar Novo Bloco</h3><button class="close-btn" onclick="app.closeModals()"><i class="fas fa-times"></i></button></div>
+            <form id="formImport">
+                <div class="form-group"><label class="form-label">Nome da Área/Bloco</label><input type="text" id="importBlockName" class="form-input" placeholder="Ex: Legislação, Inglês..." list="existingBlocks"><datalist id="existingBlocks"></datalist></div>
+                <div class="form-group"><label class="form-label">Lista de Assuntos (opcional)</label><textarea id="importText" class="form-textarea" rows="4" placeholder="Separe por vírgula..."></textarea></div>
+                <button type="submit" class="btn btn-primary" style="width:100%">Salvar Bloco</button>
+            </form>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="studyModal">
         <div class="modal">
-            <div class="modal-header"><h3>Registrar Estudo</h3><button class="close-btn" onclick="app.closeModals()">&times;</button></div>
+            <div class="modal-header"><h3>Registrar Estudo</h3><button class="close-btn" onclick="app.closeModals()"><i class="fas fa-times"></i></button></div>
             <form id="formStudy">
                 <input type="hidden" id="studySubjectId"><input type="hidden" id="studyBlockId">
                 <div class="form-group"><label class="form-label">Assunto</label><input type="text" id="studySubjectName" class="form-input" disabled style="background:#f1f5f9;"></div>
@@ -315,10 +362,10 @@
 
     <div class="modal-overlay" id="questionModal">
         <div class="modal">
-            <div class="modal-header"><h3>Registrar Questões</h3><button class="close-btn" onclick="app.closeModals()">&times;</button></div>
+            <div class="modal-header"><h3>Registrar Questões</h3><button class="close-btn" onclick="app.closeModals()"><i class="fas fa-times"></i></button></div>
             <form id="formQuestions">
-                <div class="form-group"><label class="form-label">Assunto</label><select id="qSubjectSelect" class="form-select" required><option value="">Selecione...</option></select></div>
-                <div style="display:flex; gap:10px;">
+                <div class="form-group"><label class="form-label">Assunto</label><select id="qSubjectSelect" class="form-select" required></select></div>
+                <div style="display:flex; gap:15px;">
                     <div class="form-group" style="flex:1"><label class="form-label">Total</label><input type="number" id="qTotal" class="form-input" required></div>
                     <div class="form-group" style="flex:1"><label class="form-label">Acertos</label><input type="number" id="qCorrect" class="form-input" required></div>
                 </div>
@@ -328,72 +375,34 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="qDetailModal">
-        <div class="modal">
-            <div class="modal-header"><h3 id="qdTitle">Detalhes</h3><button class="close-btn" onclick="app.closeModals()">&times;</button></div>
-            <div id="qdContent"></div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="rankingModal">
-        <div class="modal">
-            <div class="modal-header"><h3>Ranking de Desempenho</h3><button class="close-btn" onclick="app.closeModals()">&times;</button></div>
-            <div id="rankingContent"></div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="hoursModal">
-        <div class="modal">
-            <div class="modal-header"><h3>Resumo de Estudos</h3><button class="close-btn" onclick="app.closeModals()">&times;</button></div>
-            <div style="max-height: 400px; overflow-y: auto;">
-                <table class="table-simple">
-                    <thead><tr><th>Assunto</th><th style="text-align:right">Tempo</th></tr></thead>
-                    <tbody id="hoursModalList"></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="examModal">
-        <div class="modal">
-            <div class="modal-header"><h3>Agendar Prova</h3><button class="close-btn" onclick="app.closeModals()">&times;</button></div>
-            <form id="formExam">
-                <div class="form-group"><label class="form-label">Nome da Prova</label><input type="text" id="examName" class="form-input" required></div>
-                <div class="form-group"><label class="form-label">Data</label><input type="date" id="examDate" class="form-input" required></div>
-                <button type="submit" class="btn btn-primary" style="width:100%">Agendar</button>
-            </form>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="dayModal">
-        <div class="modal">
-            <div class="modal-header"><h3 id="dayModalTitle">Atividades</h3><button class="close-btn" onclick="app.closeModals()">&times;</button></div>
-            <div id="dayModalContent"></div>
-            <div style="margin-top:1rem; text-align:center">
-                <button class="btn btn-sm btn-outline" onclick="app.closeModals(); app.navigate('study')">Adicionar Novo Estudo</button>
-            </div>
-        </div>
-    </div>
+    <div class="modal-overlay" id="qDetailModal"><div class="modal"><div class="modal-header"><h3 id="qdTitle">Detalhes</h3><button class="close-btn" onclick="app.closeModals()"><i class="fas fa-times"></i></button></div><div id="qdContent"></div></div></div>
+    <div class="modal-overlay" id="rankingModal"><div class="modal"><div class="modal-header"><h3>Ranking de Desempenho</h3><button class="close-btn" onclick="app.closeModals()"><i class="fas fa-times"></i></button></div><div id="rankingContent"></div></div></div>
+    <div class="modal-overlay" id="hoursModal"><div class="modal"><div class="modal-header"><h3>Horas por Assunto</h3><button class="close-btn" onclick="app.closeModals()"><i class="fas fa-times"></i></button></div><div style="max-height: 400px; overflow-y: auto;"><table class="table-simple"><thead><tr><th>Assunto</th><th style="text-align:right">Tempo</th></tr></thead><tbody id="hoursModalList"></tbody></table></div></div></div>
+    <div class="modal-overlay" id="examModal"><div class="modal"><div class="modal-header"><h3>Agendar Prova</h3><button class="close-btn" onclick="app.closeModals()"><i class="fas fa-times"></i></button></div><form id="formExam"><div class="form-group"><label class="form-label">Nome da Prova</label><input type="text" id="examName" class="form-input" required></div><div class="form-group"><label class="form-label">Data</label><input type="date" id="examDate" class="form-input" required></div><button type="submit" class="btn btn-primary" style="width:100%">Agendar</button></form></div></div>
+    <div class="modal-overlay" id="dayModal"><div class="modal"><div class="modal-header"><h3 id="dayModalTitle">Atividades</h3><button class="close-btn" onclick="app.closeModals()"><i class="fas fa-times"></i></button></div><div id="dayModalContent"></div><div style="margin-top:1.5rem; text-align:center"><button class="btn btn-sm btn-outline" onclick="app.closeModals(); app.navigate('study')">Adicionar Novo Estudo</button></div></div></div>
 
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
+        // --- CONFIGURAÇÃO INICIAL (3.3) ---
         const INITIAL_DATA = {
-            nursing: ["Saúde da Criança", "Imunização", "Saúde da Mulher", "Hipertensão", "Diabetes", "Saúde do Idoso", "Arboviroses", "Tuberculose e Hanseníase", "ISTs e HIV", "Fundamentos de Enfermagem", "Cálculo de Medicamentos", "Farmacologia", "Centro Cirúrgico", "Doenças Renais", "Doenças Respiratórias", "Cardiologia", "Oncologia", "Suporte Básico de Vida", "Urgência e Emergência", "UTI", "Saúde Mental", "Ética e Bioética", "Biossegurança"],
-            sus: ["História das Políticas de Saúde", "Constituição Federal (196-200)", "Lei 8.080/90", "Lei 8.142/90", "Decreto 7.508/11", "PNAB", "Vigilância em Saúde", "Redes de Atenção", "Humanização", "Financiamento do SUS"],
-            portuguese: ["Interpretação de Texto", "Ortografia", "Morfologia", "Sintaxe", "Pontuação", "Crase", "Concordância", "Regência", "Colocação Pronominal"],
-            logic: ["Lógica Proposicional", "Porcentagem", "Regra de Três", "Conjuntos", "Informática: Windows/Linux", "Informática: Word/Excel", "Segurança da Informação"]
+            Enfermagem: ["Saúde da Criança", "Saúde da Mulher", "Urgência e Emergência", "Biossegurança", "Imunização", "Hipertensão", "Diabetes"],
+            SUS: ["Lei 8.080/90", "Constituição Federal", "PNAB", "Decreto 7.508/11"],
+            Português: ["Interpretação de Texto", "Ortografia", "Morfologia", "Sintaxe", "Crase"]
         };
 
         class App {
             constructor() {
                 this.data = this.loadData();
-                this.currentFilter = 'nursing';
+                this.currentFilter = Object.keys(this.data.subjects)[0] || 'Enfermagem';
                 this.isEditMode = false;
                 this.calView = 'month';
+                this.calDate = new Date(); // Data base para navegação no calendário
+                this.evolutionChart = null;
                 this.init();
             }
 
+            // --- DATA CORE ---
             getInitialStructure() {
                 const subjects = {};
                 let idCounter = 1;
@@ -404,16 +413,16 @@
             }
 
             loadData() {
-                const saved = localStorage.getItem('enFFocusData_v2.8');
+                const saved = localStorage.getItem('enFFocusData_v3.3');
                 return saved ? JSON.parse(saved) : this.getInitialStructure();
             }
 
             saveData() {
-                localStorage.setItem('enFFocusData_v2.8', JSON.stringify(this.data));
+                localStorage.setItem('enFFocusData_v3.3', JSON.stringify(this.data));
                 if(document.getElementById('dashboard').classList.contains('active')) this.renderDashboard();
             }
 
-            // Helper to get local date string YYYY-MM-DD
+            // Helper para data local YYYY-MM-DD
             getTodayStr() {
                 const d = new Date();
                 const year = d.getFullYear();
@@ -423,9 +432,9 @@
             }
 
             init() {
-                this.setupFilters();
                 this.setupForms();
                 this.renderDashboard();
+                this.renderBlockButtons();
                 this.renderSubjects();
                 this.renderReviews();
                 document.getElementById('studyDate').value = this.getTodayStr();
@@ -438,35 +447,36 @@
 
                 document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
                 document.getElementById(id).classList.add('active');
-
                 if(window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('active');
                 
                 if(id === 'dashboard') this.renderDashboard();
-                if(id === 'study') this.renderSubjects();
-                if(id === 'questions') this.renderQuestionsHistory();
+                if(id === 'study') { this.renderBlockButtons(); this.renderSubjects(); }
+                if(id === 'questions') { this.renderQuestionsHistory(); this.updateChartOptions(); }
                 if(id === 'reviews') this.renderReviews();
                 if(id === 'calendar') this.renderCalendar();
             }
 
+            // --- DASHBOARD ---
             renderDashboard() {
                 const totalHours = this.data.studies.reduce((acc, s) => acc + s.duration, 0);
-                let totalQ = 0, correctQ = 0;
-                this.data.questions.forEach(q => { totalQ += q.total; correctQ += q.correct; });
-                const accuracy = totalQ ? Math.round((correctQ / totalQ) * 100) : 0;
+                let tQ = 0, cQ = 0; 
+                this.data.questions.forEach(q => { tQ += q.total; cQ += q.correct; });
+                const accuracy = tQ ? Math.round((cQ / tQ) * 100) : 0;
 
                 document.getElementById('dashTotalHours').innerText = totalHours.toFixed(1) + 'h';
                 document.getElementById('dashAccuracy').innerText = accuracy + '%';
-                document.getElementById('dashQuestions').innerText = totalQ;
+                document.getElementById('dashQuestions').innerText = tQ;
                 document.getElementById('dashStreak').innerText = this.data.streak.count;
 
-                let maxTime = 0, maxName = "Nenhum";
+                // Foco Principal
+                let maxTime = 0, maxName = "-";
                 Object.values(this.data.subjects).flat().forEach(s => {
                     if(s.totalTime > maxTime) { maxTime = s.totalTime; maxName = s.name; }
                 });
                 document.getElementById('dashMostStudiedName').innerText = maxName;
                 document.getElementById('dashMostStudiedTime').innerText = maxTime > 0 ? maxTime.toFixed(1) + 'h' : '0h';
-                document.getElementById('dashMostStudiedBar').style.width = Math.min((maxTime/10)*100, 100) + '%';
 
+                // Checklist
                 const today = this.getTodayStr();
                 const todayReviews = this.data.reviews.filter(r => r.date === today);
                 
@@ -474,31 +484,26 @@
                 const checkList = document.getElementById('dashTodayReviews');
                 
                 if(!todayReviews.length) {
-                    checkList.innerHTML = '<div class="mini-check-empty">Nenhuma revisão para hoje!</div>';
+                    checkList.innerHTML = '<div style="padding:10px; text-align:center; color:var(--text-muted); font-size:0.9rem;">Nenhuma revisão para hoje!</div>';
                 } else {
-                    checkList.innerHTML = todayReviews.map(r => {
-                        const style = r.completed ? 'text-strike' : '';
-                        const checked = r.completed ? 'checked' : '';
-                        return `
+                    checkList.innerHTML = todayReviews.map(r => `
                         <div class="mini-check-item" onclick="app.toggleTodayReview(${r.id})">
-                            <input type="checkbox" style="pointer-events:none;" ${checked}> 
-                            <span class="${style}">${r.subject}</span>
+                            <input type="checkbox" style="pointer-events:none;" ${r.completed ? 'checked' : ''}> 
+                            <span class="${r.completed ? 'text-strike' : ''}">${r.subject}</span>
                         </div>
-                    `}).join('');
+                    `).join('');
                 }
 
+                // Progress Grid
                 const grid = document.getElementById('dashProgressGrid');
                 grid.innerHTML = '';
-                const labels = { nursing: 'Enfermagem', sus: 'SUS', portuguese: 'Português', logic: 'Lógica' };
-                for(const [key, label] of Object.entries(labels)) {
-                    const subs = this.data.subjects[key];
-                    if(!subs) continue;
+                for(const [key, subs] of Object.entries(this.data.subjects)) {
                     const done = subs.filter(s => s.studied).length;
-                    const pct = Math.round((done / subs.length) * 100);
+                    const pct = subs.length ? Math.round((done / subs.length) * 100) : 0;
                     grid.innerHTML += `
                         <div class="subject-card" onclick="app.filterSubjects('${key}')">
-                            <h4>${label}</h4>
-                            <p style="font-size:0.8rem; color:var(--text-muted)">${done}/${subs.length} estudados</p>
+                            <h4 style="text-transform:capitalize;">${key}</h4>
+                            <p style="font-size:0.85rem; color:var(--text-muted);">${done}/${subs.length} estudados</p>
                             <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
                         </div>
                     `;
@@ -507,81 +512,91 @@
             
             toggleTodayReview(id) {
                 const r = this.data.reviews.find(x => x.id === id);
-                if(r) {
-                    r.completed = !r.completed;
-                    this.saveData();
-                    this.renderDashboard();
-                    if(r.completed) this.showToast('Revisão marcada!');
-                }
+                if(r) { r.completed = !r.completed; this.saveData(); this.renderDashboard(); }
             }
 
-            filterSubjects(key) {
-                this.currentFilter = key;
-                this.navigate('study');
-            }
+            filterSubjects(key) { this.currentFilter = key; this.navigate('study'); }
             
             openTotalHoursModal() {
                 const tbody = document.getElementById('hoursModalList');
                 let allSubs = [];
-                Object.values(this.data.subjects).flat().forEach(s => {
-                    if(s.totalTime > 0) allSubs.push(s);
-                });
-                
+                Object.values(this.data.subjects).flat().forEach(s => { if(s.totalTime > 0) allSubs.push(s); });
                 allSubs.sort((a,b) => b.totalTime - a.totalTime);
                 
-                if(allSubs.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="2" style="text-align:center; padding:10px;">Nenhum estudo registrado.</td></tr>';
-                } else {
-                    tbody.innerHTML = allSubs.map(s => `
-                        <tr>
-                            <td>${s.name}</td>
-                            <td style="text-align:right; font-weight:bold;">${s.totalTime.toFixed(1)}h</td>
-                        </tr>
-                    `).join('');
-                }
+                if(!allSubs.length) tbody.innerHTML = '<tr><td colspan="2" style="text-align:center; padding:15px; color:var(--text-muted);">Nenhum estudo registrado.</td></tr>';
+                else tbody.innerHTML = allSubs.map(s => `<tr><td>${s.name}</td><td style="text-align:right; font-weight:700; color:var(--primary);">${s.totalTime.toFixed(1)}h</td></tr>`).join('');
                 document.getElementById('hoursModal').classList.add('open');
             }
 
-            setupFilters() {
-                document.querySelectorAll('.filter-btn').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        document.querySelectorAll('.filter-btn').forEach(b => { b.classList.remove('btn-primary'); b.classList.add('btn-outline'); });
-                        btn.classList.remove('btn-outline'); btn.classList.add('btn-primary');
-                        this.currentFilter = btn.dataset.filter;
-                        this.renderSubjects();
-                    });
-                });
-            }
-
+            // --- STUDY ---
             toggleEditMode() {
                 this.isEditMode = !this.isEditMode;
                 document.getElementById('toggleEditBtn').classList.toggle('btn-primary');
                 document.getElementById('addSubjectContainer').style.display = this.isEditMode ? 'block' : 'none';
+                this.renderBlockButtons();
                 this.renderSubjects();
             }
 
+            renderBlockButtons() {
+                const container = document.getElementById('blocksFilterContainer');
+                container.innerHTML = '';
+                
+                Object.keys(this.data.subjects).forEach(key => {
+                    const btn = document.createElement('button');
+                    btn.className = `btn btn-sm ${this.currentFilter === key ? 'btn-primary' : 'btn-outline'}`;
+                    btn.style.marginRight = '8px';
+                    btn.style.textTransform = 'capitalize';
+                    btn.innerHTML = key;
+                    btn.onclick = () => { this.currentFilter = key; this.renderBlockButtons(); this.renderSubjects(); };
+
+                    if(this.isEditMode) {
+                        const icon = document.createElement('i');
+                        icon.className = 'fas fa-trash';
+                        icon.style.marginLeft = '8px';
+                        icon.style.color = '#ef4444';
+                        icon.onclick = (e) => { e.stopPropagation(); this.deleteBlock(key); };
+                        btn.appendChild(icon);
+                    }
+                    container.appendChild(btn);
+                });
+            }
+
             renderSubjects() {
-                const list = this.data.subjects[this.currentFilter];
+                const list = this.data.subjects[this.currentFilter] || [];
                 const container = document.getElementById('subjectsListContainer');
                 
-                document.querySelectorAll('.filter-btn').forEach(b => {
-                    if(b.dataset.filter === this.currentFilter) { b.classList.add('btn-primary'); b.classList.remove('btn-outline'); }
-                    else { b.classList.remove('btn-primary'); b.classList.add('btn-outline'); }
-                });
+                if(!list.length) { container.innerHTML = '<div style="padding:2rem; text-align:center; color:var(--text-muted);">Nenhum assunto neste bloco.</div>'; return; }
 
                 container.innerHTML = list.map(sub => `
                     <div class="list-item">
-                        <input type="checkbox" style="width:18px; height:18px; accent-color:var(--primary)" ${sub.studied ? 'checked' : ''} ${this.isEditMode ? 'disabled' : ''} onchange="app.toggleStudied('${this.currentFilter}', ${sub.id})">
+                        <input type="checkbox" style="width:18px; height:18px; accent-color:var(--primary);" ${sub.studied ? 'checked' : ''} ${this.isEditMode ? 'disabled' : ''} onchange="app.toggleStudied('${this.currentFilter}', ${sub.id})">
                         <div style="flex:1">
-                            <div style="font-weight:600">${sub.name}</div>
-                            <div style="font-size:0.8rem; color:var(--text-muted)">${sub.totalTime.toFixed(1)}h</div>
+                            <div style="font-weight:600; color:var(--text-main);">${sub.name}</div>
+                            <div style="font-size:0.85rem; color:var(--text-muted);">${sub.totalTime.toFixed(1)}h estudadas</div>
                         </div>
                         ${this.isEditMode ? 
-                            `<i class="fas fa-trash" style="color:var(--danger); cursor:pointer" onclick="app.deleteSubject('${this.currentFilter}', ${sub.id})"></i>` :
+                            `<button class="btn btn-sm btn-outline" style="color:var(--danger); border-color:var(--danger);" onclick="app.deleteSubject('${this.currentFilter}', ${sub.id})"><i class="fas fa-trash"></i></button>` :
                             `<button class="btn btn-sm btn-outline" onclick="app.openStudyModal('${this.currentFilter}', ${sub.id}, '${sub.name}')"><i class="fas fa-play"></i></button>`
                         }
                     </div>
                 `).join('');
+            }
+
+            deleteBlock(key) {
+                if(confirm(`Excluir bloco "${key}" e todos os assuntos?`)) {
+                    delete this.data.subjects[key];
+                    const keys = Object.keys(this.data.subjects);
+                    this.currentFilter = keys.length > 0 ? keys[0] : null;
+                    this.saveData(); this.renderBlockButtons(); this.renderSubjects();
+                }
+            }
+
+            openImportModal() {
+                const dl = document.getElementById('existingBlocks');
+                dl.innerHTML = Object.keys(this.data.subjects).map(k => `<option value="${k}">`).join('');
+                document.getElementById('importBlockName').value = this.currentFilter || '';
+                document.getElementById('importText').value = '';
+                document.getElementById('importModal').classList.add('open');
             }
 
             addNewSubject() {
@@ -612,12 +627,12 @@
                 document.getElementById('studyModal').classList.add('open');
             }
 
+            // --- QUESTIONS & CHARTS ---
             openQuestionModal() {
                 const select = document.getElementById('qSubjectSelect');
                 select.innerHTML = '<option value="">Selecione...</option>';
-                const labels = { nursing: 'Enfermagem', sus: 'SUS', portuguese: 'Português', logic: 'Lógica' };
                 for(const block in this.data.subjects) {
-                    const grp = document.createElement('optgroup'); grp.label = labels[block];
+                    const grp = document.createElement('optgroup'); grp.label = block;
                     this.data.subjects[block].forEach(s => {
                         const opt = document.createElement('option'); opt.value = `${block}|${s.id}`; opt.textContent = s.name; grp.appendChild(opt);
                     });
@@ -636,7 +651,7 @@
                     (!dateFilter || q.date.startsWith(dateFilter))
                 ).reverse();
 
-                if(!list.length) { container.innerHTML = '<div style="padding:1rem; text-align:center">Sem registros.</div>'; return; }
+                if(!list.length) { container.innerHTML = '<div style="padding:2rem; text-align:center; color:var(--text-muted);">Sem registros encontrados.</div>'; return; }
 
                 container.innerHTML = list.map(q => {
                     const pct = Math.round((q.correct/q.total)*100);
@@ -646,14 +661,69 @@
                         <div class="list-item" onclick="app.openQuestionDetails('${data}')">
                             <span class="tag ${cls}">${pct}%</span>
                             <div style="flex:1">
-                                <div style="font-weight:600">${q.subject}</div>
-                                <div style="font-size:0.8rem; color:var(--text-muted)">${q.correct}/${q.total} • ${new Date(q.date).toLocaleDateString()}</div>
+                                <div style="font-weight:600;">${q.subject}</div>
+                                <div style="font-size:0.85rem; color:var(--text-muted);">${q.correct}/${q.total} • ${new Date(q.date+"T00:00:00").toLocaleDateString()}</div>
                             </div>
-                            <i class="fas fa-chevron-right" style="font-size:0.8rem; color:#ccc"></i>
+                            <i class="fas fa-chevron-right" style="font-size:0.8rem; color:#ccc;"></i>
                         </div>
                     `;
                 }).join('');
                 this.updateQuestionStats();
+            }
+
+            updateChartOptions() {
+                const select = document.getElementById('chartSubjectSelector');
+                const subjects = [...new Set(this.data.questions.map(q => q.subject))].sort();
+                const current = select.value;
+                
+                select.innerHTML = '<option value="">Selecione um assunto...</option>';
+                subjects.forEach(s => {
+                    const opt = document.createElement('option');
+                    opt.value = s; opt.textContent = s; select.appendChild(opt);
+                });
+                
+                if(current && subjects.includes(current)) select.value = current;
+                this.updateEvolutionChart();
+            }
+
+            updateEvolutionChart() {
+                const subject = document.getElementById('chartSubjectSelector').value;
+                const ctx = document.getElementById('evolutionChart').getContext('2d');
+
+                if (this.evolutionChart) this.evolutionChart.destroy();
+                if (!subject) return; 
+
+                const records = this.data.questions
+                    .filter(q => q.subject === subject)
+                    .sort((a,b) => new Date(a.date) - new Date(b.date));
+
+                const labels = records.map(r => new Date(r.date + "T00:00:00").toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit'}));
+                const data = records.map(r => Math.round((r.correct / r.total) * 100));
+
+                this.evolutionChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Aproveitamento (%)',
+                            data: data,
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: true,
+                            pointBackgroundColor: '#fff',
+                            pointBorderColor: '#3b82f6',
+                            pointRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: { y: { beginAtZero: true, max: 100 } },
+                        plugins: { legend: { display: false } }
+                    }
+                });
             }
 
             openQuestionDetails(data) {
@@ -661,13 +731,13 @@
                 const pct = Math.round((q.correct/q.total)*100);
                 document.getElementById('qdTitle').innerText = q.subject;
                 document.getElementById('qdContent').innerHTML = `
-                    <p style="color:var(--text-muted); margin-bottom:10px">${new Date(q.date).toLocaleString()}</p>
-                    <div style="display:flex; gap:10px; margin-bottom:15px">
+                    <p style="color:var(--text-muted); margin-bottom:10px;">${new Date(q.date+"T00:00:00").toLocaleDateString()}</p>
+                    <div style="display:flex; gap:10px; margin-bottom:15px;">
                         <span class="tag tag-blue">Total: ${q.total}</span>
                         <span class="tag tag-green">Acertos: ${q.correct}</span>
                         <span class="tag">${pct}%</span>
                     </div>
-                    <div style="background:#f8fafc; padding:1rem; border-radius:8px; border:1px solid #eee">
+                    <div style="background:#f8fafc; padding:1rem; border-radius:10px; border:1px solid #e2e8f0;">
                         <strong>Notas:</strong><br>${q.notes || 'Sem anotações.'}
                     </div>
                 `;
@@ -684,34 +754,26 @@
                 const ranking = Object.entries(stats).map(([k,v]) => ({ name: k, pct: (v.c/v.t)*100, t: v.t })).sort((a,b) => b.pct - a.pct);
                 
                 document.getElementById('rankingContent').innerHTML = ranking.length ? `
-                    <table style="width:100%; border-collapse:collapse">
+                    <table class="table-simple">
                         ${ranking.map(r => `
-                            <tr style="border-bottom:1px solid #eee">
-                                <td style="padding:8px">${r.name}</td>
-                                <td style="padding:8px; text-align:center">${r.t}q</td>
-                                <td style="padding:8px; text-align:right; font-weight:bold; color:${r.pct>=80?'var(--accent)':r.pct<50?'var(--danger)':'#333'}">${Math.round(r.pct)}%</td>
-                            </tr>
-                        `).join('')}
-                    </table>
-                ` : 'Sem dados suficientes.';
+                            <tr>
+                                <td>${r.name}</td>
+                                <td style="text-align:center;">${r.t}q</td>
+                                <td style="text-align:right; font-weight:700; color:${r.pct>=80?'var(--accent)':r.pct<50?'var(--danger)':'var(--text-main)'}">${Math.round(r.pct)}%</td>
+                            </tr>`).join('')}
+                    </table>` : '<div style="text-align:center; padding:1rem; color:var(--text-muted)">Sem dados.</div>';
                 document.getElementById('rankingModal').classList.add('open');
             }
 
             updateQuestionStats() {
-                let totalAll = 0;
-                let correctAll = 0;
-                let stats = {};
-
+                let totalAll = 0, correctAll = 0, stats = {};
                 this.data.questions.forEach(q => {
-                    totalAll += q.total;
-                    correctAll += q.correct;
-
+                    totalAll += q.total; correctAll += q.correct;
                     if(!stats[q.subject]) stats[q.subject] = { t:0, c:0 };
                     stats[q.subject].t += q.total; stats[q.subject].c += q.correct;
                 });
 
-                const globalAcc = totalAll ? Math.round((correctAll / totalAll) * 100) : 0;
-                document.getElementById('qDashRate').innerText = globalAcc + '%';
+                document.getElementById('qDashRate').innerText = totalAll ? Math.round((correctAll / totalAll) * 100) + '%' : '0%';
                 document.getElementById('qDashTotal').innerText = totalAll;
 
                 let best = {v:-1, n:'-'}, worst = {v:101, n:'-'};
@@ -731,17 +793,18 @@
             renderReviews() {
                 const pending = this.data.reviews.filter(r => !r.completed).sort((a,b) => new Date(a.date) - new Date(b.date));
                 const list = document.getElementById('reviewsList');
-                if(!pending.length) { list.innerHTML = '<div style="padding:1rem; text-align:center">Nenhuma revisão pendente.</div>'; return; }
+                if(!pending.length) { list.innerHTML = '<div style="padding:2rem; text-align:center; color:var(--text-muted);">Nenhuma revisão pendente.</div>'; return; }
                 
                 const today = this.getTodayStr();
                 list.innerHTML = pending.map(r => {
                     const color = r.date === today ? 'var(--warning)' : r.date < today ? 'var(--danger)' : 'var(--text-muted)';
+                    const displayDate = new Date(r.date + "T00:00:00").toLocaleDateString('pt-BR');
                     return `
                         <div class="list-item">
-                            <input type="checkbox" style="width:18px; height:18px; accent-color:var(--primary)" onchange="app.completeReview(${r.id})">
+                            <input type="checkbox" style="width:18px; height:18px; accent-color:var(--primary);" onchange="app.completeReview(${r.id})">
                             <div style="flex:1">
-                                <div style="font-weight:600">${r.subject}</div>
-                                <div style="font-size:0.8rem; color:${color}; font-weight:bold">${new Date(r.date+'T00:00').toLocaleDateString()} (${r.type} dias)</div>
+                                <div style="font-weight:600;">${r.subject}</div>
+                                <div style="font-size:0.85rem; color:${color}; font-weight:600;">${displayDate} (${r.type} dias)</div>
                             </div>
                         </div>
                     `;
@@ -753,10 +816,16 @@
                 if(r) { r.completed = true; this.saveData(); this.renderReviews(); this.renderDashboard(); this.showToast('Revisão concluída!'); }
             }
 
+            // --- CALENDAR ---
+            changeMonth(offset) {
+                this.calDate.setMonth(this.calDate.getMonth() + offset);
+                this.renderCalendar();
+            }
+
             setCalView(view) {
                 this.calView = view;
-                document.getElementById('btnViewMonth').className = view === 'month' ? 'cal-view-btn active' : 'cal-view-btn';
-                document.getElementById('btnViewWeek').className = view === 'week' ? 'cal-view-btn active' : 'cal-view-btn';
+                document.getElementById('btnViewMonth').classList.toggle('active', view === 'month');
+                document.getElementById('btnViewWeek').classList.toggle('active', view === 'week');
                 this.renderCalendar();
             }
 
@@ -765,53 +834,44 @@
                 grid.innerHTML = '';
                 const title = document.getElementById('calTitle');
                 
-                const now = new Date();
                 let startLoop, endLoop;
 
                 if(this.calView === 'month') {
-                    title.innerText = now.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
-                    const daysInMonth = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
-                    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
+                    title.innerText = this.calDate.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+                    const firstDay = new Date(this.calDate.getFullYear(), this.calDate.getMonth(), 1).getDay();
+                    const daysInMonth = new Date(this.calDate.getFullYear(), this.calDate.getMonth()+1, 0).getDate();
                     
                     for(let i=0; i<firstDay; i++) grid.innerHTML += '<div class="cal-day empty"></div>';
                     startLoop = 1; endLoop = daysInMonth;
-
-                    for(let i=startLoop; i<=endLoop; i++) {
-                        const d = new Date(now.getFullYear(), now.getMonth(), i);
+                    
+                    for(let i=1; i<=daysInMonth; i++) {
+                        const d = new Date(this.calDate.getFullYear(), this.calDate.getMonth(), i);
                         this.renderDayCell(grid, d);
                     }
                 } else {
                     title.innerText = "Semana Atual";
                     const curr = new Date();
-                    const day = curr.getDay(); 
-                    const diff = curr.getDate() - day; 
-                    const startOfWeek = new Date(curr.setDate(diff));
-
+                    const start = new Date(curr.setDate(curr.getDate() - curr.getDay()));
                     for(let i=0; i<7; i++) {
-                        const d = new Date(startOfWeek);
-                        d.setDate(startOfWeek.getDate() + i);
+                        const d = new Date(start); d.setDate(start.getDate() + i);
                         this.renderDayCell(grid, d);
                     }
                 }
             }
 
             renderDayCell(grid, d) {
-                // Correctly construct local YYYY-MM-DD
                 const year = d.getFullYear();
                 const month = String(d.getMonth() + 1).padStart(2, '0');
                 const day = String(d.getDate()).padStart(2, '0');
                 const dateStr = `${year}-${month}-${day}`;
 
                 const isToday = dateStr === this.getTodayStr();
-                
                 const studies = this.data.studies.filter(s => s.date === dateStr);
-                const reviews = this.data.reviews.filter(r => r.date === dateStr && !r.completed);
                 const exams = this.data.exams.filter(e => e.date === dateStr);
 
                 let html = `<div class="day-num">${d.getDate()}</div>`;
                 exams.forEach(e => html += `<div class="evt-tag evt-exam">${e.name}</div>`);
                 if(studies.length) html += `<div class="evt-tag evt-study">${studies.length} estudos</div>`;
-                if(reviews.length) html += `<div class="evt-tag evt-review">${reviews.length} revisões</div>`;
 
                 const div = document.createElement('div');
                 div.className = `cal-day ${isToday ? 'today' : ''}`;
@@ -831,7 +891,7 @@
                 const content = document.getElementById('dayModalContent');
                 let html = '';
 
-                if(!studies.length && !reviews.length && !exams.length) html = '<p style="text-align:center; color:#888">Nada agendado.</p>';
+                if(!studies.length && !reviews.length && !exams.length) html = '<p style="text-align:center; color:var(--text-muted); padding:1rem;">Nada agendado para este dia.</p>';
                 else {
                     if(exams.length) exams.forEach(e => html += `<div class="day-detail-item type-exam"><strong>Prova:</strong> ${e.name}</div>`);
                     if(reviews.length) reviews.forEach(r => html += `<div class="day-detail-item type-review"><strong>Revisão:</strong> ${r.subject}</div>`);
@@ -853,6 +913,23 @@
             openExamModal() { document.getElementById('examModal').classList.add('open'); }
 
             setupForms() {
+                // Import
+                document.getElementById('formImport').addEventListener('submit', e => {
+                    e.preventDefault();
+                    let name = document.getElementById('importBlockName').value;
+                    const text = document.getElementById('importText').value;
+                    if(!name) return;
+                    if(!this.data.subjects[name]) this.data.subjects[name] = [];
+                    if(text) {
+                        const items = text.split(',').map(s => s.trim()).filter(s => s);
+                        items.forEach(i => this.data.subjects[name].push({id: Date.now()+Math.random(), name: i, studied: false, totalTime: 0}));
+                        this.showToast(`${items.length} assuntos adicionados.`);
+                    } else this.showToast(`Bloco ${name} criado.`);
+                    this.currentFilter = name;
+                    this.saveData(); this.closeModals(); this.renderBlockButtons(); this.renderSubjects();
+                });
+
+                // Study
                 document.getElementById('formStudy').addEventListener('submit', e => {
                     e.preventDefault();
                     const block = document.getElementById('studyBlockId').value;
@@ -862,25 +939,24 @@
                     const subName = document.getElementById('studySubjectName').value;
 
                     this.data.studies.push({ date, block, subjectId: id, duration: dur });
-                    
                     const sub = this.data.subjects[block].find(s => s.id === id);
                     if(sub) { sub.totalTime += dur; sub.studied = true; }
 
-                    const baseDate = new Date(date + "T00:00:00");
-                    [1, 7, 30].forEach(days => {
-                        const rDate = new Date(baseDate);
-                        rDate.setDate(rDate.getDate() + days);
-                        this.data.reviews.push({ id: Date.now()+Math.random(), subject: subName, date: rDate.toISOString().split('T')[0], completed: false, type: days });
+                    const base = new Date(date + "T00:00:00");
+                    [1, 7, 30, 60].forEach(days => {
+                        const rDate = new Date(base); rDate.setDate(rDate.getDate() + days);
+                        const y = rDate.getFullYear();
+                        const m = String(rDate.getMonth()+1).padStart(2,'0');
+                        const d = String(rDate.getDate()).padStart(2,'0');
+                        this.data.reviews.push({ id: Date.now()+Math.random(), subject: subName, date: `${y}-${m}-${d}`, completed: false, type: days });
                     });
 
                     this.updateStreak(date);
-
-                    this.saveData();
-                    this.closeModals();
-                    this.showToast(`Estudo registrado! +${dur}h`);
+                    this.saveData(); this.closeModals(); this.showToast(`Estudo registrado! +${dur}h`);
                     if(this.currentFilter === block) this.renderSubjects();
                 });
 
+                // Questions
                 document.getElementById('formQuestions').addEventListener('submit', e => {
                     e.preventDefault();
                     const val = document.getElementById('qSubjectSelect').value;
@@ -891,20 +967,14 @@
                     const correct = parseInt(document.getElementById('qCorrect').value);
                     const notes = document.getElementById('qNotes').value;
 
-                    this.data.questions.push({ date: new Date().toISOString(), subject: sub.name, total, correct, notes });
-                    this.saveData(); 
-                    this.closeModals(); 
-                    this.showToast('Questões salvas!');
-                    this.renderDashboard(); 
-                    this.renderQuestionsHistory(); 
+                    this.data.questions.push({ date: this.getTodayStr(), subject: sub.name, total, correct, notes });
+                    this.saveData(); this.closeModals(); this.showToast('Questões salvas!');
+                    this.renderDashboard(); this.renderQuestionsHistory(); this.updateChartOptions();
                 });
 
                 document.getElementById('formExam').addEventListener('submit', e => {
                     e.preventDefault();
-                    this.data.exams.push({ 
-                        name: document.getElementById('examName').value, 
-                        date: document.getElementById('examDate').value 
-                    });
+                    this.data.exams.push({ name: document.getElementById('examName').value, date: document.getElementById('examDate').value });
                     this.saveData(); this.closeModals(); this.showToast('Prova agendada!'); this.renderCalendar();
                 });
             }
@@ -912,19 +982,9 @@
             updateStreak(dateStr) {
                 const last = this.data.streak.lastDate;
                 const today = this.getTodayStr();
-                
-                const d = new Date();
-                d.setDate(d.getDate() - 1);
-                const year = d.getFullYear();
-                const month = String(d.getMonth() + 1).padStart(2, '0');
-                const day = String(d.getDate()).padStart(2, '0');
-                const yest = `${year}-${month}-${day}`;
-                
-                if(dateStr === today || dateStr === yest) {
-                    if(last === yest) this.data.streak.count++;
-                    else if(last !== today) this.data.streak.count = 1;
-                }
-                if(!last) this.data.streak.count = 1;
+                const d = new Date(); d.setDate(d.getDate() - 1);
+                const yest = d.toISOString().split('T')[0];
+                if(dateStr === today || dateStr === yest) { if(last !== today) this.data.streak.count++; }
                 this.data.streak.lastDate = dateStr;
             }
 
@@ -933,24 +993,19 @@
                 document.getElementById('formStudy').reset();
                 document.getElementById('formQuestions').reset();
                 document.getElementById('formExam').reset();
+                document.getElementById('formImport').reset();
             }
 
             showToast(msg) {
                 const box = document.getElementById('toastContainer');
-                const t = document.createElement('div');
-                t.className = 'toast success';
-                t.innerHTML = `<i class="fas fa-check-circle"></i> ${msg}`;
-                box.appendChild(t);
-                setTimeout(() => t.remove(), 3000);
+                const t = document.createElement('div'); t.className = 'toast success'; t.innerHTML = `<i class="fas fa-check-circle"></i> ${msg}`;
+                box.appendChild(t); setTimeout(() => t.remove(), 3000);
             }
 
             exportData() {
                 const blob = new Blob([JSON.stringify(this.data)], {type: 'application/json'});
                 const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `enffocus_backup_${new Date().toISOString().slice(0,10)}.json`;
-                a.click();
+                const a = document.createElement('a'); a.href = url; a.download = `enffocus_backup_${this.getTodayStr()}.json`; a.click();
             }
 
             importData(input) {
@@ -958,30 +1013,16 @@
                 if(!file) return;
                 const reader = new FileReader();
                 reader.onload = e => {
-                    try {
-                        this.data = JSON.parse(e.target.result);
-                        this.saveData();
-                        location.reload();
-                    } catch(err) { alert('Arquivo inválido'); }
+                    try { this.data = JSON.parse(e.target.result); this.saveData(); location.reload(); } catch(err) { alert('Erro no arquivo'); }
                 };
                 reader.readAsText(file);
             }
 
-            resetData() {
-                if(confirm('Tem certeza? Isso apagará tudo.')) {
-                    localStorage.removeItem('enFFocusData_v2.7');
-                    location.reload();
-                }
-            }
+            resetData() { if(confirm('Apagar tudo?')) { localStorage.removeItem('enFFocusData_v3.3'); location.reload(); } }
         }
 
         const app = new App();
-        
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal-overlay')) {
-                app.closeModals();
-            }
-        }
+        window.onclick = (e) => { if(e.target.classList.contains('modal-overlay')) app.closeModals(); }
     </script>
 </body>
 </html>

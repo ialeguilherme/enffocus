@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>enFFocus 3.3 | Suite Completa</title>
+    <title>enFFocus 3.5 | Suite Completa</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -137,6 +137,8 @@
         .btn-outline { background: white; border: 1px solid var(--border); color: var(--text-main); }
         .btn-outline:hover { background: #f8fafc; border-color: #cbd5e1; }
         .btn-sm { padding: 8px 14px; font-size: 0.85rem; }
+        .btn-danger { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
+        .btn-danger:hover { background: #fecaca; }
 
         .chart-container { position: relative; height: 300px; width: 100%; }
         .day-detail-item { padding: 12px; border-radius: 10px; margin-bottom: 10px; background: #f8fafc; border-left: 4px solid #ccc; font-size: 0.9rem; }
@@ -155,6 +157,10 @@
         .tag-green { background: #dcfce7; color: #16a34a; }
         .tag-blue { background: #e0f2fe; color: #0284c7; }
         .tag-red { background: #fee2e2; color: #dc2626; }
+        
+        /* Timer Pulse */
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
+        .timer-running { animation: pulse 2s infinite; color: var(--primary); }
 
         @media (max-width: 768px) {
             .sidebar { position: fixed; transform: translateX(-100%); height: 100%; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
@@ -200,7 +206,7 @@
             <div class="dashboard-grid">
                 <div class="card stat-card clickable-card" onclick="app.openTotalHoursModal()">
                     <div class="stat-icon bg-blue"><i class="fas fa-clock"></i></div>
-                    <div class="stat-info"><h3 id="dashTotalHours">0h</h3><p>Horas Totais</p></div>
+                    <div class="stat-info"><h3 id="dashTotalHours">0:00h</h3><p>Horas Totais</p></div>
                 </div>
                 <div class="card stat-card">
                     <div class="stat-icon bg-green"><i class="fas fa-check"></i></div>
@@ -208,7 +214,7 @@
                 </div>
                 <div class="card stat-card">
                     <div class="stat-icon bg-orange"><i class="fas fa-fire"></i></div>
-                    <div class="stat-info"><h3 id="dashStreak">0</h3><p>Dias Seguidos</p></div>
+                    <div class="stat-info"><h3 id="dashStreak">0</h3><p>Dias Estudados</p></div>
                 </div>
                 <div class="card stat-card">
                     <div class="stat-icon bg-purple"><i class="fas fa-question"></i></div>
@@ -225,7 +231,7 @@
                             </div>
                         </div>
                         <div style="text-align:right;">
-                            <h3 id="dashMostStudiedTime" style="color:var(--primary);">0h</h3>
+                            <h3 id="dashMostStudiedTime" style="color:var(--primary);">0:00h</h3>
                         </div>
                     </div>
                 </div>
@@ -340,8 +346,19 @@
         <div class="modal">
             <div class="modal-header"><h3>Criar Novo Bloco</h3><button class="close-btn" onclick="app.closeModals()"><i class="fas fa-times"></i></button></div>
             <form id="formImport">
-                <div class="form-group"><label class="form-label">Nome da Área/Bloco</label><input type="text" id="importBlockName" class="form-input" placeholder="Ex: Legislação, Inglês..." list="existingBlocks"><datalist id="existingBlocks"></datalist></div>
-                <div class="form-group"><label class="form-label">Lista de Assuntos (opcional)</label><textarea id="importText" class="form-textarea" rows="4" placeholder="Separe por vírgula..."></textarea></div>
+                <div class="form-group">
+                    <label class="form-label">Nome da Área/Bloco</label>
+                    <input type="text" id="importBlockName" class="form-input" placeholder="Ex: Legislação, Inglês..." list="existingBlocks">
+                    <datalist id="existingBlocks"></datalist>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Lista de Assuntos (opcional)</label>
+                    <select id="importSeparator" class="form-select" style="margin-bottom:10px">
+                        <option value=",">Separar por Vírgula (,)</option>
+                        <option value=";">Separar por Ponto e Vírgula (;)</option>
+                    </select>
+                    <textarea id="importText" class="form-textarea" rows="4" placeholder="Cole a lista aqui..."></textarea>
+                </div>
                 <button type="submit" class="btn btn-primary" style="width:100%">Salvar Bloco</button>
             </form>
         </div>
@@ -350,10 +367,18 @@
     <div class="modal-overlay" id="studyModal">
         <div class="modal">
             <div class="modal-header"><h3>Registrar Estudo</h3><button class="close-btn" onclick="app.closeModals()"><i class="fas fa-times"></i></button></div>
+            
+            <div style="background:#f1f5f9; padding:15px; border-radius:10px; text-align:center; margin-bottom:15px; border:1px solid var(--border);">
+                <div id="timerDisplay" style="font-size:2rem; font-weight:700; font-family:monospace; margin-bottom:10px;">00:00:00</div>
+                <button type="button" id="btnTimer" class="btn btn-primary" onclick="app.toggleTimer()">
+                    <i class="fas fa-play"></i> Iniciar Cronômetro
+                </button>
+            </div>
+
             <form id="formStudy">
                 <input type="hidden" id="studySubjectId"><input type="hidden" id="studyBlockId">
                 <div class="form-group"><label class="form-label">Assunto</label><input type="text" id="studySubjectName" class="form-input" disabled style="background:#f1f5f9;"></div>
-                <div class="form-group"><label class="form-label">Tempo (h)</label><input type="number" id="studyDuration" step="0.1" class="form-input" required></div>
+                <div class="form-group"><label class="form-label">Tempo (formato decimal: 1.5 = 1h30)</label><input type="number" id="studyDuration" step="0.01" class="form-input" required></div>
                 <div class="form-group"><label class="form-label">Data</label><input type="date" id="studyDate" class="form-input" required></div>
                 <button type="submit" class="btn btn-primary" style="width:100%">Salvar</button>
             </form>
@@ -384,9 +409,60 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
-        // --- CONFIGURAÇÃO INICIAL (3.3) ---
+        // --- CONFIGURAÇÃO INICIAL (3.5) ---
         const INITIAL_DATA = {
-            Enfermagem: ["Saúde da Criança", "Saúde da Mulher", "Urgência e Emergência", "Biossegurança", "Imunização", "Hipertensão", "Diabetes"],
+            Enfermagem: [
+                "Anatomia, Fisiologia, Histologia, Parasitologia e Microbiologia",
+                "Fundamentos de Enfermagem",
+                "SAE e Processo de Enfermagem",
+                "Teorias de Enfermagem",
+                "Administração e Cálculo de Medicamentos",
+                "Farmacologia",
+                "Biossegurança e IRAS",
+                "Feridas e Curativos",
+                "Exames Complementares dos Sistemas Orgânicos",
+                "Hipertensão Arterial",
+                "Diabetes Mellitus",
+                "Doenças Cardiovasculares",
+                "Doenças Respiratórias",
+                "Doenças Renais",
+                "Clínica Médica / Saúde do Adulto (outros temas)",
+                "Oncologia",
+                "Saúde da Criança e do Adolescente",
+                "Imunização",
+                "Saúde da Mulher",
+                "ISTs e HIV",
+                "Saúde do Idoso",
+                "Saúde do Homem",
+                "Saúde Mental",
+                "Cuidados da Enfermagem em Situações de Violência",
+                "Arboviroses (Dengue, Zika, Chikungunya...)",
+                "Tuberculose (TB)",
+                "Hanseníase",
+                "Raiva Humana",
+                "Doenças Transmissíveis Diversas",
+                "Doenças de Notificação Compulsória",
+                "Suporte Básico e Avançado de Vida",
+                "Urgências Clínicas",
+                "Urgências Traumáticas",
+                "Animais Peçonhentos e Intoxicações",
+                "Unidade de Tratamento Intensivo (UTI)",
+                "Enfermagem Cirúrgica",
+                "Administração em Enfermagem",
+                "Segurança do Paciente (PNSP)",
+                "CME e Resíduos de Serviços de Saúde",
+                "Sistema de Gestão Ambiental",
+                "Projetos de Estabelecimentos (RDC 50)",
+                "Saúde do Trabalhador",
+                "Legislação de Enfermagem",
+                "Resoluções do COFEN",
+                "CEPE e Bioética",
+                "História e Evolução da Enfermagem",
+                "Pesquisa em Saúde e Bioestatística",
+                "Hemoterapia",
+                "Transplantes de Órgãos",
+                "Autocuidado"
+            ],
             SUS: ["Lei 8.080/90", "Constituição Federal", "PNAB", "Decreto 7.508/11"],
             Português: ["Interpretação de Texto", "Ortografia", "Morfologia", "Sintaxe", "Crase"]
         };
@@ -397,8 +473,14 @@
                 this.currentFilter = Object.keys(this.data.subjects)[0] || 'Enfermagem';
                 this.isEditMode = false;
                 this.calView = 'month';
-                this.calDate = new Date(); // Data base para navegação no calendário
+                this.calDate = new Date();
                 this.evolutionChart = null;
+                
+                // Timer
+                this.timerInterval = null;
+                this.timerSeconds = 0;
+                this.isTimerRunning = false;
+
                 this.init();
             }
 
@@ -413,22 +495,29 @@
             }
 
             loadData() {
-                const saved = localStorage.getItem('enFFocusData_v3.3');
+                const saved = localStorage.getItem('enFFocusData_v3.5');
                 return saved ? JSON.parse(saved) : this.getInitialStructure();
             }
 
             saveData() {
-                localStorage.setItem('enFFocusData_v3.3', JSON.stringify(this.data));
+                localStorage.setItem('enFFocusData_v3.5', JSON.stringify(this.data));
                 if(document.getElementById('dashboard').classList.contains('active')) this.renderDashboard();
             }
 
-            // Helper para data local YYYY-MM-DD
             getTodayStr() {
                 const d = new Date();
                 const year = d.getFullYear();
                 const month = String(d.getMonth() + 1).padStart(2, '0');
                 const day = String(d.getDate()).padStart(2, '0');
                 return `${year}-${month}-${day}`;
+            }
+
+            // Novo Helper de Formatação de Tempo (HH:MM)
+            formatTime(decimalTime) {
+                if(!decimalTime) return '0:00h';
+                const hours = Math.floor(decimalTime);
+                const minutes = Math.round((decimalTime - hours) * 60);
+                return `${hours}:${minutes.toString().padStart(2, '0')}h`;
             }
 
             init() {
@@ -463,23 +552,22 @@
                 this.data.questions.forEach(q => { tQ += q.total; cQ += q.correct; });
                 const accuracy = tQ ? Math.round((cQ / tQ) * 100) : 0;
 
-                document.getElementById('dashTotalHours').innerText = totalHours.toFixed(1) + 'h';
+                // Alterado para usar formatTime
+                document.getElementById('dashTotalHours').innerText = this.formatTime(totalHours);
                 document.getElementById('dashAccuracy').innerText = accuracy + '%';
                 document.getElementById('dashQuestions').innerText = tQ;
                 document.getElementById('dashStreak').innerText = this.data.streak.count;
 
-                // Foco Principal
                 let maxTime = 0, maxName = "-";
                 Object.values(this.data.subjects).flat().forEach(s => {
                     if(s.totalTime > maxTime) { maxTime = s.totalTime; maxName = s.name; }
                 });
                 document.getElementById('dashMostStudiedName').innerText = maxName;
-                document.getElementById('dashMostStudiedTime').innerText = maxTime > 0 ? maxTime.toFixed(1) + 'h' : '0h';
+                // Alterado para usar formatTime
+                document.getElementById('dashMostStudiedTime').innerText = maxTime > 0 ? this.formatTime(maxTime) : '0:00h';
 
-                // Checklist
                 const today = this.getTodayStr();
                 const todayReviews = this.data.reviews.filter(r => r.date === today);
-                
                 document.getElementById('dashReviewCount').innerText = todayReviews.filter(r => !r.completed).length;
                 const checkList = document.getElementById('dashTodayReviews');
                 
@@ -494,7 +582,6 @@
                     `).join('');
                 }
 
-                // Progress Grid
                 const grid = document.getElementById('dashProgressGrid');
                 grid.innerHTML = '';
                 for(const [key, subs] of Object.entries(this.data.subjects)) {
@@ -522,9 +609,9 @@
                 let allSubs = [];
                 Object.values(this.data.subjects).flat().forEach(s => { if(s.totalTime > 0) allSubs.push(s); });
                 allSubs.sort((a,b) => b.totalTime - a.totalTime);
-                
                 if(!allSubs.length) tbody.innerHTML = '<tr><td colspan="2" style="text-align:center; padding:15px; color:var(--text-muted);">Nenhum estudo registrado.</td></tr>';
-                else tbody.innerHTML = allSubs.map(s => `<tr><td>${s.name}</td><td style="text-align:right; font-weight:700; color:var(--primary);">${s.totalTime.toFixed(1)}h</td></tr>`).join('');
+                // Alterado para usar formatTime
+                else tbody.innerHTML = allSubs.map(s => `<tr><td>${s.name}</td><td style="text-align:right; font-weight:700; color:var(--primary);">${this.formatTime(s.totalTime)}</td></tr>`).join('');
                 document.getElementById('hoursModal').classList.add('open');
             }
 
@@ -567,19 +654,35 @@
                 
                 if(!list.length) { container.innerHTML = '<div style="padding:2rem; text-align:center; color:var(--text-muted);">Nenhum assunto neste bloco.</div>'; return; }
 
-                container.innerHTML = list.map(sub => `
+                container.innerHTML = list.map(sub => {
+                    let nameDisplay;
+                    if (this.isEditMode) {
+                        nameDisplay = `<input type="text" class="form-input" style="padding:4px 8px; font-size:0.9rem" value="${sub.name}" onchange="app.renameSubject('${this.currentFilter}', ${sub.id}, this.value)">`;
+                    } else {
+                        nameDisplay = `<div style="font-weight:600; color:var(--text-main);">${sub.name}</div>`;
+                    }
+                    // Alterado para usar formatTime
+                    return `
                     <div class="list-item">
                         <input type="checkbox" style="width:18px; height:18px; accent-color:var(--primary);" ${sub.studied ? 'checked' : ''} ${this.isEditMode ? 'disabled' : ''} onchange="app.toggleStudied('${this.currentFilter}', ${sub.id})">
                         <div style="flex:1">
-                            <div style="font-weight:600; color:var(--text-main);">${sub.name}</div>
-                            <div style="font-size:0.85rem; color:var(--text-muted);">${sub.totalTime.toFixed(1)}h estudadas</div>
+                            ${nameDisplay}
+                            <div style="font-size:0.85rem; color:var(--text-muted);">${this.formatTime(sub.totalTime)} estudadas</div>
                         </div>
                         ${this.isEditMode ? 
                             `<button class="btn btn-sm btn-outline" style="color:var(--danger); border-color:var(--danger);" onclick="app.deleteSubject('${this.currentFilter}', ${sub.id})"><i class="fas fa-trash"></i></button>` :
                             `<button class="btn btn-sm btn-outline" onclick="app.openStudyModal('${this.currentFilter}', ${sub.id}, '${sub.name}')"><i class="fas fa-play"></i></button>`
                         }
                     </div>
-                `).join('');
+                `}).join('');
+            }
+
+            renameSubject(block, id, newName) {
+                const sub = this.data.subjects[block].find(s => s.id === id);
+                if (sub && newName.trim()) {
+                    sub.name = newName.trim();
+                    this.saveData();
+                }
             }
 
             deleteBlock(key) {
@@ -624,7 +727,57 @@
                 document.getElementById('studySubjectId').value = id;
                 document.getElementById('studySubjectName').value = name;
                 document.getElementById('studyDuration').value = '';
+                
+                // Reset Timer
+                this.stopTimer();
+                this.timerSeconds = 0;
+                this.updateTimerDisplay();
+
                 document.getElementById('studyModal').classList.add('open');
+            }
+
+            // --- TIMER LOGIC ---
+            toggleTimer() {
+                if (this.isTimerRunning) {
+                    this.stopTimer();
+                } else {
+                    this.startTimer();
+                }
+            }
+
+            startTimer() {
+                this.isTimerRunning = true;
+                const btn = document.getElementById('btnTimer');
+                btn.innerHTML = '<i class="fas fa-stop"></i> Parar e Salvar Tempo';
+                btn.classList.replace('btn-primary', 'btn-danger');
+                document.getElementById('timerDisplay').classList.add('timer-running');
+                
+                this.timerInterval = setInterval(() => {
+                    this.timerSeconds++;
+                    this.updateTimerDisplay();
+                }, 1000);
+            }
+
+            stopTimer() {
+                this.isTimerRunning = false;
+                clearInterval(this.timerInterval);
+                const btn = document.getElementById('btnTimer');
+                btn.innerHTML = '<i class="fas fa-play"></i> Iniciar/Continuar';
+                btn.classList.replace('btn-danger', 'btn-primary');
+                document.getElementById('timerDisplay').classList.remove('timer-running');
+
+                // Converter segundos para horas decimais para input
+                if (this.timerSeconds > 0) {
+                    const hours = (this.timerSeconds / 3600).toFixed(2);
+                    document.getElementById('studyDuration').value = hours;
+                }
+            }
+
+            updateTimerDisplay() {
+                const h = Math.floor(this.timerSeconds / 3600).toString().padStart(2, '0');
+                const m = Math.floor((this.timerSeconds % 3600) / 60).toString().padStart(2, '0');
+                const s = (this.timerSeconds % 60).toString().padStart(2, '0');
+                document.getElementById('timerDisplay').innerText = `${h}:${m}:${s}`;
             }
 
             // --- QUESTIONS & CHARTS ---
@@ -868,10 +1021,14 @@
                 const isToday = dateStr === this.getTodayStr();
                 const studies = this.data.studies.filter(s => s.date === dateStr);
                 const exams = this.data.exams.filter(e => e.date === dateStr);
+                
+                // Alteração: Mostrar revisões no calendário
+                const dayReviews = this.data.reviews.filter(r => r.date === dateStr && !r.completed);
 
                 let html = `<div class="day-num">${d.getDate()}</div>`;
                 exams.forEach(e => html += `<div class="evt-tag evt-exam">${e.name}</div>`);
                 if(studies.length) html += `<div class="evt-tag evt-study">${studies.length} estudos</div>`;
+                if(dayReviews.length) html += `<div class="evt-tag evt-review">${dayReviews.length} revisões</div>`;
 
                 const div = document.createElement('div');
                 div.className = `cal-day ${isToday ? 'today' : ''}`;
@@ -897,7 +1054,8 @@
                     if(reviews.length) reviews.forEach(r => html += `<div class="day-detail-item type-review"><strong>Revisão:</strong> ${r.subject}</div>`);
                     if(studies.length) studies.forEach(s => {
                         const subName = this.getSubjectName(s.block, s.subjectId);
-                        html += `<div class="day-detail-item type-study"><strong>Estudou:</strong> ${subName} (${s.duration}h)</div>`;
+                        // Alterado para usar formatTime
+                        html += `<div class="day-detail-item type-study"><strong>Estudou:</strong> ${subName} (${this.formatTime(s.duration)})</div>`;
                     });
                 }
                 content.innerHTML = html;
@@ -918,13 +1076,18 @@
                     e.preventDefault();
                     let name = document.getElementById('importBlockName').value;
                     const text = document.getElementById('importText').value;
+                    const separator = document.getElementById('importSeparator').value;
+                    
                     if(!name) return;
                     if(!this.data.subjects[name]) this.data.subjects[name] = [];
+                    
                     if(text) {
-                        const items = text.split(',').map(s => s.trim()).filter(s => s);
+                        const items = text.split(separator).map(s => s.trim()).filter(s => s);
                         items.forEach(i => this.data.subjects[name].push({id: Date.now()+Math.random(), name: i, studied: false, totalTime: 0}));
                         this.showToast(`${items.length} assuntos adicionados.`);
-                    } else this.showToast(`Bloco ${name} criado.`);
+                    } else {
+                        this.showToast(`Bloco ${name} criado.`);
+                    }
                     this.currentFilter = name;
                     this.saveData(); this.closeModals(); this.renderBlockButtons(); this.renderSubjects();
                 });
@@ -942,17 +1105,29 @@
                     const sub = this.data.subjects[block].find(s => s.id === id);
                     if(sub) { sub.totalTime += dur; sub.studied = true; }
 
-                    const base = new Date(date + "T00:00:00");
-                    [1, 7, 30, 60].forEach(days => {
-                        const rDate = new Date(base); rDate.setDate(rDate.getDate() + days);
-                        const y = rDate.getFullYear();
-                        const m = String(rDate.getMonth()+1).padStart(2,'0');
-                        const d = String(rDate.getDate()).padStart(2,'0');
-                        this.data.reviews.push({ id: Date.now()+Math.random(), subject: subName, date: `${y}-${m}-${d}`, completed: false, type: days });
-                    });
+                    // --- Alteração: Lógica inteligente de revisão ---
+                    // Verifica se existe alguma revisão deste assunto com data no futuro em relação à data do estudo
+                    const existingFutureReview = this.data.reviews.find(r => 
+                        r.subject === subName && 
+                        !r.completed && 
+                        new Date(r.date) > new Date(date)
+                    );
+
+                    // Só gera novas revisões se NÃO houver revisão futura pendente (ou seja, ciclo acabou ou nunca começou)
+                    if (!existingFutureReview) {
+                        const base = new Date(date + "T00:00:00");
+                        [1, 7, 30, 60].forEach(days => {
+                            const rDate = new Date(base); rDate.setDate(rDate.getDate() + days);
+                            const y = rDate.getFullYear();
+                            const m = String(rDate.getMonth()+1).padStart(2,'0');
+                            const d = String(rDate.getDate()).padStart(2,'0');
+                            this.data.reviews.push({ id: Date.now()+Math.random(), subject: subName, date: `${y}-${m}-${d}`, completed: false, type: days });
+                        });
+                    }
 
                     this.updateStreak(date);
-                    this.saveData(); this.closeModals(); this.showToast(`Estudo registrado! +${dur}h`);
+                    // Alterado para usar formatTime no toast
+                    this.saveData(); this.closeModals(); this.showToast(`Estudo registrado! +${this.formatTime(dur)}`);
                     if(this.currentFilter === block) this.renderSubjects();
                 });
 
@@ -989,6 +1164,7 @@
             }
 
             closeModals() {
+                if(this.isTimerRunning) this.stopTimer(); // Para timer se fechar modal
                 document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open'));
                 document.getElementById('formStudy').reset();
                 document.getElementById('formQuestions').reset();
@@ -1018,7 +1194,7 @@
                 reader.readAsText(file);
             }
 
-            resetData() { if(confirm('Apagar tudo?')) { localStorage.removeItem('enFFocusData_v3.3'); location.reload(); } }
+            resetData() { if(confirm('Apagar tudo?')) { localStorage.removeItem('enFFocusData_v3.5'); location.reload(); } }
         }
 
         const app = new App();
